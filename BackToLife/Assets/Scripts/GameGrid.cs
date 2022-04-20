@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security;
 using UnityEngine;
 
@@ -48,14 +49,66 @@ namespace BackToLife
 
         }
 
-        public void UpdateCells()
+        public void UpdateCellsInWorld()
         {
             foreach (var cell in Cells)
             {
-                var transform = cell.CurrentEntity.transform;
+                if(cell.currentEntity == null)
+                    continue;
+                var transform = cell.currentEntity.transform;
                 transform.position = cell.position;
-                transform.localScale = cell.size*.9f;
+                transform.localScale = cell.size*.9f; // setting scale !!!temp!!!
             }
+        }
+
+        public void UpdateCellsInGrid()
+        {
+            for (int column = 0; column < nrOfColumns; column++)
+            {
+                for (int row = 0; row < nrOfRows; row++)
+                {
+                    var cell = Cells[column, row];
+                    
+                    if (cell.currentEntity == null) continue;
+                    
+                    if (cell.currentEntity.gridPosition == GetGridPositionFromCell(cell)) continue;
+                    
+                    var cellCurrPos = cell.currentEntity.gridPosition;
+                    Cells[(int) cellCurrPos.x, (int) cellCurrPos.y].currentEntity = cell.currentEntity;
+                    
+                    cell.currentEntity = null;
+                    Debug.Log($"moved + {Cells[(int) cellCurrPos.x, (int) cellCurrPos.y].currentEntity} + to + {cellCurrPos}");
+                }
+            }
+        }
+
+        public Cell GetCellFromGridPosition(Vector2 pos)
+        {
+            return Cells[(int)pos.x, (int)pos.y];
+        }
+
+        public Vector2 GetGridPositionFromCell(Cell cell)
+        {
+            for (int column = 0; column < nrOfColumns; column++)
+            {
+                for (int row = 0; row < nrOfRows; row++)
+                {
+                    if (Cells[column, row] == cell)
+                        return new Vector2(column, row);
+                }
+            }
+
+            return new Vector2(0, 0);
+        }
+        
+        public bool CellEmpty(Cell cell)
+        {
+            return cell.currentEntity == null;
+        }
+
+        public bool MoveInGrid(Vector2 pos)
+        {
+            return pos.x < 0 || pos.y < 0 || pos.x > nrOfColumns-1 || pos.y > nrOfRows-1;
         }
         
         [Serializable]
@@ -63,7 +116,7 @@ namespace BackToLife
         {
             public Vector2 position;
             public Vector2 size;
-            public Entity CurrentEntity;
+            public Entity currentEntity;
 
             public Cell(Vector2 pos, Vector2 s)
             {
