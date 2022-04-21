@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BackToLife
 {
-    
+    [Serializable]
     public class GameGrid
     {
         public int nrOfRows;
@@ -56,30 +56,27 @@ namespace BackToLife
                 if(cell.currentEntity == null)
                     continue;
                 var transform = cell.currentEntity.transform;
-                transform.position = cell.position;
+                transform.position = cell.worldPosition;
                 transform.localScale = cell.size*.9f; // setting scale !!!temp!!!
             }
         }
 
         public void UpdateCellsInGrid()
         {
-            for (int column = 0; column < nrOfColumns; column++)
+            var entities = new List<Entity>();
+            foreach (var cell in Cells)
             {
-                for (int row = 0; row < nrOfRows; row++)
-                {
-                    var cell = Cells[column, row];
-                    
-                    if (cell.currentEntity == null) continue;
-                    
-                    if (cell.currentEntity.gridPosition == GetGridPositionFromCell(cell)) continue;
-                    
-                    var cellCurrPos = cell.currentEntity.gridPosition;
-                    Cells[(int) cellCurrPos.x, (int) cellCurrPos.y].currentEntity = cell.currentEntity;
-                    
-                    cell.currentEntity = null;
-                    Debug.Log($"moved + {Cells[(int) cellCurrPos.x, (int) cellCurrPos.y].currentEntity} + to + {cellCurrPos}");
-                }
+                if (cell.currentEntity == null) continue;
+                entities.Add(cell.currentEntity);
+                cell.currentEntity = null;
             }
+
+            foreach (var entity in entities)
+            {
+                Cells[(int) entity.gridPosition.x, (int) entity.gridPosition.y].currentEntity = entity;
+                entity.cell = Cells[(int) entity.gridPosition.x, (int) entity.gridPosition.y];
+            }
+            
         }
 
         public Cell GetCellFromGridPosition(Vector2 pos)
@@ -114,13 +111,13 @@ namespace BackToLife
         [Serializable]
         public class Cell
         {
-            public Vector2 position;
+            public Vector2 worldPosition;
             public Vector2 size;
             public Entity currentEntity;
 
             public Cell(Vector2 pos, Vector2 s)
             {
-                position = pos;
+                worldPosition = pos;
                 size = s;
             }
         }
