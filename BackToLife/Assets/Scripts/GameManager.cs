@@ -14,19 +14,23 @@ namespace BackToLife
         public float verticalMargin;
         public Block blockPrefab;
         public Player playerPrefab;
-        private Player _player;
-        [SerializeField]private GameGrid _grid;
+        [SerializeField]private GridPattern _pattern;
+        [SerializeField] private GameGrid _grid;
         private TouchController _touchController;
+        private Entity _player;
+        
         private void Awake()
         {
             _touchController = new TouchController();
+            if (!GetPatternData())
+                Debug.LogError($"{_pattern.name} is not valid!");
             InitializeGrid();
-            _grid.Cells[1, 1].currentEntity = Instantiate(blockPrefab, transform, true);
-            _grid.Cells[1, 1].currentEntity.cell = _grid.Cells[1, 1];
-            _grid.Cells[1, 1].currentEntity.gridPosition = Vector2.one;
+            /*_grid.cells[1, 1].currentEntity = Instantiate(blockPrefab, transform, true);
+            _grid.cells[1, 1].currentEntity.cell = _grid.cells[1, 1];
+            _grid.cells[1, 1].currentEntity.gridPosition = Vector2.one;
             _player = Instantiate(playerPrefab, transform, true);
-            _player.cell = _grid.Cells[0, 0];
-            _grid.Cells[0, 0].currentEntity = _player;
+            _player.cell = _grid.cells[0, 0];
+            _grid.cells[0, 0].currentEntity = _player;*/
             
             
         }
@@ -64,9 +68,46 @@ namespace BackToLife
             return true;
         }
 
+        private bool GetPatternData()
+        {
+            nrOfColumns = _pattern.nrOfColumns;
+            nrOfRows = _pattern.nrOfRows;
+            return _pattern.Valid;
+        }
         private void InitializeGrid()
         {
             _grid = new GameGrid(nrOfRows,nrOfColumns, transform.position, horizontalMargin,verticalMargin);
+            GetComponentInChildren<SpriteRenderer>().transform.localScale = _grid._gridSize;
+            Entity prefab = blockPrefab;
+            var type = EntityType.Regular;
+            foreach (var cell in _pattern.cells)
+            {
+                switch (cell.entityType)
+                {
+                    case EntityType.Player:
+                        prefab = playerPrefab;
+                        type = EntityType.Player;
+                        break;
+                    case EntityType.Regular:
+                        prefab = blockPrefab;
+                        type = EntityType.Regular;
+                        break;
+                    case EntityType.Slippery:
+                        break;
+                    case EntityType.UnMovable:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                var entity = Instantiate(prefab, transform, true);
+                entity.cell = _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y];
+                entity.gridPosition = cell.gridPosition;
+                entity.type = type;
+                _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].currentEntity = entity;
+                if(type != EntityType.Player) continue;
+                _player = entity;
+            }
         }
         
     }
