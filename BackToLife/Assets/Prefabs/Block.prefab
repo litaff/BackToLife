@@ -95,3 +95,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1233b103ec1a4e4fb0151fde6a7e98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPosition: {x: 0, y: 0}
+  cell:
+    worldPosition: {x: 0, y: 0}
+    size: {x: 0, y: 0}
+    currentEntity: {fileID: 0}
+  type: 1
+  weight: 1

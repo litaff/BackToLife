@@ -13,40 +13,100 @@ namespace BackToLife
         public float horizontalMargin;
         public float verticalMargin;
         public Block blockPrefab;
+        public Block heavyBlockPrefab;
+        public Block endTilePrefab;
         public Player playerPrefab;
-        [SerializeField]private GridPattern _pattern;
-        [SerializeField] private GameGrid _grid;
+        public bool winState;
+        private GameGrid _grid;
         private TouchController _touchController;
         private Entity _player;
-        
+        private Entity _endTile;
+
         private void Awake()
         {
             _touchController = new TouchController();
-            if (!GetPatternData())
-                Debug.LogError($"{_pattern.name} is not valid!");
-            InitializeGrid();
-            /*_grid.cells[1, 1].currentEntity = Instantiate(blockPrefab, transform, true);
-            _grid.cells[1, 1].currentEntity.cell = _grid.cells[1, 1];
-            _grid.cells[1, 1].currentEntity.gridPosition = Vector2.one;
-            _player = Instantiate(playerPrefab, transform, true);
-            _player.cell = _grid.cells[0, 0];
-            _grid.cells[0, 0].currentEntity = _player;*/
-            
-            
         }
 
         private void Update()
         {
             _grid.UpdateCellsInWorld();
             var swipeDir = _touchController.GetSwipeDirection();
-            if(swipeDir != Vector2.zero)
-                MoveInDirection(_player, swipeDir,moveStrength);
+            if (swipeDir != Vector2.zero)
+                MoveInDirection(_player, swipeDir, moveStrength);
+            winState = _grid.CheckForCrampedCell(_player, _endTile);
             _grid.UpdateCellsInGrid();
+        }
+
+        private void OnDisable()
+        {
+            _grid.Deconstruct();
+            winState = false;
+            _player.Destroy();
+            _player = null;
+            _endTile.Destroy();
+            _endTile = null;
+        }
+
+        public void InitializeGrid(GridPattern pattern)
+        {
+            _grid = new GameGrid(nrOfRows,nrOfColumns, transform.position, horizontalMargin,verticalMargin);
+            GetComponentInChildren<SpriteRenderer>().transform.localScale = _grid._gridSize;
+            Entity prefab = blockPrefab;
+            foreach (var cell in pattern.cells)
+            {
+                switch (cell.entityType)
+                {
+                    case EntityType.Player:
+                        prefab = playerPrefab;
+                        break;
+                    case EntityType.Regular:
+                        prefab = blockPrefab;
+                        break;
+                    case EntityType.Slippery:
+                        break;
+                    case EntityType.UnMovable:
+                        break;
+                    case EntityType.Heavy:
+                        prefab = heavyBlockPrefab;
+                        break;
+                    case EntityType.EndTile:
+                        prefab = endTilePrefab;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                var entity = Instantiate(prefab, transform, true);
+                entity.cell = _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y];
+                entity.gridPosition = cell.gridPosition;
+                entity.type = prefab.type;
+                _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].currentEntity = entity;
+                if (prefab.type != EntityType.Player && prefab.type != EntityType.EndTile)
+                    continue;
+                if(prefab.type == EntityType.EndTile)
+                    _endTile = entity;
+                else
+                    _player = entity;
+
+
+            }
+        }
+
+        public bool GetPatternData(GridPattern pattern)
+        {
+            nrOfColumns = pattern.nrOfColumns;
+            nrOfRows = pattern.nrOfRows;
+            return pattern.Valid;
         }
 
         private bool MoveInDirection(Entity entity, Vector2 dir, int moveStr)
         {
-            if(moveStr <= 0)
+            if (WinCondition(entity, dir))
+            {
+                entity.gridPosition += dir;
+                return true;
+            }
+            if(moveStr < entity.weight)
                 return false;
             if (_grid.MoveInGrid(entity.gridPosition + dir))
             {
@@ -57,7 +117,7 @@ namespace BackToLife
             if (!_grid.CellEmpty(_grid.GetCellFromGridPosition(entity.gridPosition + dir)))
             {
                 if (!MoveInDirection(_grid.GetCellFromGridPosition(entity.gridPosition + dir).currentEntity, dir,
-                        moveStr - 1))
+                        moveStr - entity.weight))
                 {
                     Debug.LogWarning($"{entity} + tried moving to full cell!");
                     return false;
@@ -68,47 +128,9 @@ namespace BackToLife
             return true;
         }
 
-        private bool GetPatternData()
+        private bool WinCondition(Entity entity, Vector2 dir)
         {
-            nrOfColumns = _pattern.nrOfColumns;
-            nrOfRows = _pattern.nrOfRows;
-            return _pattern.Valid;
+            return entity == _player && _grid.GetCellFromGridPosition(entity.gridPosition + dir).currentEntity == _endTile;
         }
-        private void InitializeGrid()
-        {
-            _grid = new GameGrid(nrOfRows,nrOfColumns, transform.position, horizontalMargin,verticalMargin);
-            GetComponentInChildren<SpriteRenderer>().transform.localScale = _grid._gridSize;
-            Entity prefab = blockPrefab;
-            var type = EntityType.Regular;
-            foreach (var cell in _pattern.cells)
-            {
-                switch (cell.entityType)
-                {
-                    case EntityType.Player:
-                        prefab = playerPrefab;
-                        type = EntityType.Player;
-                        break;
-                    case EntityType.Regular:
-                        prefab = blockPrefab;
-                        type = EntityType.Regular;
-                        break;
-                    case EntityType.Slippery:
-                        break;
-                    case EntityType.UnMovable:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                var entity = Instantiate(prefab, transform, true);
-                entity.cell = _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y];
-                entity.gridPosition = cell.gridPosition;
-                entity.type = type;
-                _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].currentEntity = entity;
-                if(type != EntityType.Player) continue;
-                _player = entity;
-            }
-        }
-        
     }
 }

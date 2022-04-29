@@ -28,6 +28,16 @@ namespace BackToLife
             _position = position;
             Init();
         }
+
+        public void Deconstruct()
+        {
+            foreach (var cell in cells)
+            {
+                if(cell.currentEntity == null) continue;
+                
+                cell.currentEntity.Destroy();
+            }
+        }
         
         private void Init()
         {
@@ -108,6 +118,11 @@ namespace BackToLife
         public bool MoveInGrid(Vector2 pos)
         {
             return pos.x < 0 || pos.y < 0 || pos.x > nrOfColumns-1 || pos.y > nrOfRows-1;
+        }
+
+        public bool CheckForCrampedCell(Entity first, Entity second)
+        {
+            return first.gridPosition == second.gridPosition;
         }
         
         [Serializable]

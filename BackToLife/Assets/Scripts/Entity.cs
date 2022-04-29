@@ -9,5 +9,11 @@ namespace BackToLife
         public Vector2 gridPosition;
         public GameGrid.Cell cell;
         public EntityType type;
+        public int weight;
+
+        public void Destroy()
+        {
+            Destroy(gameObject);
+        }
     }
 }
