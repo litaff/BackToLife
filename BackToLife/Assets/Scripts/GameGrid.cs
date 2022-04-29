@@ -45,6 +45,7 @@ namespace BackToLife
             _camera = Camera.main;
             _gridSize = 2 * _camera.ScreenToWorldPoint(
                 new Vector2(Screen.width - horizontalMargin, Screen.height - verticalMargin));
+            _camera.aspect = 0.5625f;
             _cellSize = new Vector2(_gridSize.x / nrOfColumns, _gridSize.y / nrOfRows);
             _cellSize = _cellSize.x > _cellSize.y ? new Vector2(_cellSize.y, _cellSize.y) : new Vector2(_cellSize.x, _cellSize.x);
             _gridSize = new Vector2(_cellSize.x * nrOfColumns, _cellSize.y * nrOfRows);
@@ -69,7 +70,6 @@ namespace BackToLife
                     continue;
                 var transform = cell.currentEntity.transform;
                 transform.position = cell.worldPosition;
-                transform.localScale = cell.size*.9f; // setting scale !!!temp!!!
             }
         }
 

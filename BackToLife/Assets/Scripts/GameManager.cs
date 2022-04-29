@@ -50,7 +50,7 @@ namespace BackToLife
         public void InitializeGrid(GridPattern pattern)
         {
             _grid = new GameGrid(nrOfRows,nrOfColumns, transform.position, horizontalMargin,verticalMargin);
-            GetComponentInChildren<SpriteRenderer>().transform.localScale = _grid._gridSize;
+            GetComponentInChildren<SpriteRenderer>().size = _grid._gridSize + Vector2.one*6/16;
             Entity prefab = blockPrefab;
             foreach (var cell in pattern.cells)
             {
@@ -80,6 +80,8 @@ namespace BackToLife
                 entity.cell = _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y];
                 entity.gridPosition = cell.gridPosition;
                 entity.type = prefab.type;
+                entity.transform.GetComponent<SpriteRenderer>().size =
+                    _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].size;
                 _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].currentEntity = entity;
                 if (prefab.type != EntityType.Player && prefab.type != EntityType.EndTile)
                     continue;
@@ -101,6 +103,11 @@ namespace BackToLife
 
         private bool MoveInDirection(Entity entity, Vector2 dir, int moveStr)
         {
+            if (_grid.MoveInGrid(entity.gridPosition + dir))
+            {
+                Debug.LogWarning($"{entity} + tried moving of grid!");
+                return false;
+            }
             if (WinCondition(entity, dir))
             {
                 entity.gridPosition += dir;
@@ -108,12 +115,6 @@ namespace BackToLife
             }
             if(moveStr < entity.weight)
                 return false;
-            if (_grid.MoveInGrid(entity.gridPosition + dir))
-            {
-                Debug.LogWarning($"{entity} + tried moving of grid!");
-                return false;
-            }
-
             if (!_grid.CellEmpty(_grid.GetCellFromGridPosition(entity.gridPosition + dir)))
             {
                 if (!MoveInDirection(_grid.GetCellFromGridPosition(entity.gridPosition + dir).currentEntity, dir,

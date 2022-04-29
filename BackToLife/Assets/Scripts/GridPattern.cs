@@ -8,7 +8,9 @@ namespace BackToLife
     [CreateAssetMenu(fileName = "GridPattern", menuName = "ScriptableObjects/GridPattern", order = 1)]
     public class GridPattern : ScriptableObject
     {
+        [Range(8,16)]
         public int nrOfRows;
+        [Range(4,9)]
         public int nrOfColumns;
         public List<Cell> cells;
         public bool Valid { get; private set; }
