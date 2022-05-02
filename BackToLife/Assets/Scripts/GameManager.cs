@@ -133,5 +133,6 @@ namespace BackToLife
         {
             return entity == _player && _grid.GetCellFromGridPosition(entity.gridPosition + dir).currentEntity == _endTile;
         }
+
     }
 }

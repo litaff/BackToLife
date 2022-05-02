@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bc59b775b70459c943c82a3e5cbeb1f, type: 3}
   m_Name: GridPattern
   m_EditorClassIdentifier: 
-  nrOfRows: 16
-  nrOfColumns: 9
+  nrOfRows: 10
+  nrOfColumns: 4
   cells:
   - gridPosition: {x: 0, y: 0}
     entityType: 0
