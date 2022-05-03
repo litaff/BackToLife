@@ -1595,16 +1595,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 672e5837dc2361543b4ea2d5c76ecf3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nrOfRows: 10
-  nrOfColumns: 5
+  winState: 0
   moveStrength: 3
-  horizontalMargin: 100
-  verticalMargin: 100
+  cellSize: 0.5
   blockPrefab: {fileID: 7297537256093995403, guid: 0d31f8b3f0208fa4f8e174b75c1112e5, type: 3}
   heavyBlockPrefab: {fileID: 7297537256093995403, guid: 4131f4a8f979c6a40b7272d0a19caa2f, type: 3}
   endTilePrefab: {fileID: 7297537256093995403, guid: fdfb7dd91ef9602449a70b969d164a39, type: 3}
   playerPrefab: {fileID: 5270656449224862916, guid: bab4d77a5c7c1c440b9c26c0c97f6ff0, type: 3}
-  winState: 0
 --- !u!1 &2121392839
 GameObject:
   m_ObjectHideFlags: 0

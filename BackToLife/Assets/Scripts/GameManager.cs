@@ -7,50 +7,23 @@ namespace BackToLife
 {
     public class GameManager : MonoBehaviour
     {
-        public int nrOfRows;
-        public int nrOfColumns;
-        public int moveStrength;
-        public float horizontalMargin;
-        public float verticalMargin;
-        public Block blockPrefab;
-        public Block heavyBlockPrefab;
-        public Block endTilePrefab;
-        public Player playerPrefab;
         public bool winState;
+        [SerializeField] private int moveStrength;
+        [SerializeField] private float cellSize;
+        [SerializeField] private Block blockPrefab;
+        [SerializeField] private Block heavyBlockPrefab;
+        [SerializeField] private Block endTilePrefab;
+        [SerializeField] private Player playerPrefab;
+        private Vector2 _dimensions;
         private GameGrid _grid;
-        private TouchController _touchController;
         private Entity _player;
         private Entity _endTile;
-
-        private void Awake()
-        {
-            _touchController = new TouchController();
-        }
-
-        private void Update()
-        {
-            _grid.UpdateCellsInWorld();
-            var swipeDir = _touchController.GetSwipeDirection();
-            if (swipeDir != Vector2.zero)
-                MoveInDirection(_player, swipeDir, moveStrength);
-            winState = _grid.CheckForCrampedCell(_player, _endTile);
-            _grid.UpdateCellsInGrid();
-        }
-
-        private void OnDisable()
-        {
-            _grid.Deconstruct();
-            winState = false;
-            _player.Destroy();
-            _player = null;
-            _endTile.Destroy();
-            _endTile = null;
-        }
+        private TouchController _touchController;
 
         public void InitializeGrid(GridPattern pattern)
         {
-            _grid = new GameGrid(nrOfRows,nrOfColumns, transform.position, horizontalMargin,verticalMargin);
-            GetComponentInChildren<SpriteRenderer>().size = _grid._gridSize + Vector2.one*6/16;
+            _grid = new GameGrid(cellSize ,_dimensions, transform.position);
+            GetComponentInChildren<SpriteRenderer>().size = _grid.GetBackgroundSize(Vector2.one * 6 / 16);
             Entity prefab = blockPrefab;
             foreach (var cell in pattern.cells)
             {
@@ -80,8 +53,8 @@ namespace BackToLife
                 entity.cell = _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y];
                 entity.gridPosition = cell.gridPosition;
                 entity.type = prefab.type;
-                entity.transform.GetComponent<SpriteRenderer>().size =
-                    _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].size;
+                entity.transform.GetComponent<SpriteRenderer>().size = Vector2.one *
+                                                                       _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].size;
                 _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].currentEntity = entity;
                 if (prefab.type != EntityType.Player && prefab.type != EntityType.EndTile)
                     continue;
@@ -96,9 +69,34 @@ namespace BackToLife
 
         public bool GetPatternData(GridPattern pattern)
         {
-            nrOfColumns = pattern.nrOfColumns;
-            nrOfRows = pattern.nrOfRows;
+            _dimensions.x = pattern.nrOfColumns;
+            _dimensions.y = pattern.nrOfRows;
             return pattern.Valid;
+        }
+
+        private void Awake()
+        {
+            _touchController = new TouchController();
+        }
+
+        private void Update()
+        {
+            _grid.UpdateCellsInWorld();
+            var swipeDir = _touchController.GetSwipeDirection();
+            if (swipeDir != Vector2.zero)
+                MoveInDirection(_player, swipeDir, moveStrength);
+            winState = _grid.CheckForCrampedCell(_player, _endTile);
+            _grid.UpdateCellsInGrid();
+        }
+
+        private void OnDisable()
+        {
+            _grid.Deconstruct();
+            winState = false;
+            _player.Destroy();
+            _player = null;
+            _endTile.Destroy();
+            _endTile = null;
         }
 
         private bool MoveInDirection(Entity entity, Vector2 dir, int moveStr)

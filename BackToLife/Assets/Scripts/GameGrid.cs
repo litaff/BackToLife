@@ -9,23 +9,17 @@ namespace BackToLife
     [Serializable]
     public class GameGrid
     {
-        public int nrOfRows;
-        public int nrOfColumns;
-        public float horizontalMargin;
-        public float verticalMargin;
         public Cell[,] cells;
-        private Vector2 _cellSize;
-        public Vector2 _gridSize;
-        private Camera _camera;
+        private float _cellSize;
+        private Vector2 _dimensions;
+        private Vector2 _gridSize;
         private Vector2 _position;
 
-        public GameGrid(int nrOfRows, int nrOfColumns, Vector2 position, float horizontalMargin = 0, float verticalMargin = 0)
+        public GameGrid(float cellSize, Vector2 dim, Vector2 pos)
         {
-            this.nrOfRows = nrOfRows;
-            this.nrOfColumns = nrOfColumns;
-            this.horizontalMargin = horizontalMargin;
-            this.verticalMargin = verticalMargin;
-            _position = position;
+            _dimensions = dim;
+            _position = pos;
+            _cellSize = cellSize;
             Init();
         }
 
@@ -38,28 +32,10 @@ namespace BackToLife
                 cell.currentEntity.Destroy();
             }
         }
-        
-        private void Init()
-        {
-            cells = new Cell[nrOfColumns, nrOfRows];
-            _camera = Camera.main;
-            _gridSize = 2 * _camera.ScreenToWorldPoint(
-                new Vector2(Screen.width - horizontalMargin, Screen.height - verticalMargin));
-            _camera.aspect = 0.5625f;
-            _cellSize = new Vector2(_gridSize.x / nrOfColumns, _gridSize.y / nrOfRows);
-            _cellSize = _cellSize.x > _cellSize.y ? new Vector2(_cellSize.y, _cellSize.y) : new Vector2(_cellSize.x, _cellSize.x);
-            _gridSize = new Vector2(_cellSize.x * nrOfColumns, _cellSize.y * nrOfRows);
-                for (int row = 0; row < nrOfRows; row++)
-            {
-                for (int column = 0; column < nrOfColumns; column++)
-                {
-                    var position = _position - _gridSize/2 +
-                                   new Vector2(_cellSize.x * column + _cellSize.x/2, _cellSize.y * row + _cellSize.y/2);
-                    cells[column, row] = new Cell(position, _cellSize);
-                }
-            }
-            
 
+        public Vector2 GetBackgroundSize(Vector2 offset)
+        {
+            return _gridSize + offset;
         }
 
         public void UpdateCellsInWorld()
@@ -98,9 +74,9 @@ namespace BackToLife
 
         public Vector2 GetGridPositionFromCell(Cell cell)
         {
-            for (int column = 0; column < nrOfColumns; column++)
+            for (var column = 0; column < (int)_dimensions.x; column++)
             {
-                for (int row = 0; row < nrOfRows; row++)
+                for (var row = 0; row < (int)_dimensions.y; row++)
                 {
                     if (cells[column, row] == cell)
                         return new Vector2(column, row);
@@ -109,7 +85,7 @@ namespace BackToLife
 
             return new Vector2(0, 0);
         }
-        
+
         public bool CellEmpty(Cell cell)
         {
             return cell.currentEntity == null;
@@ -117,25 +93,42 @@ namespace BackToLife
 
         public bool MoveInGrid(Vector2 pos)
         {
-            return pos.x < 0 || pos.y < 0 || pos.x > nrOfColumns-1 || pos.y > nrOfRows-1;
+            return pos.x < 0 || pos.y < 0 || pos.x > (int)_dimensions.x-1 || pos.y > (int)_dimensions.y-1;
         }
 
         public bool CheckForCrampedCell(Entity first, Entity second)
         {
             return first.gridPosition == second.gridPosition;
         }
-        
+
+        private void Init()
+        {
+            cells = new Cell[(int)_dimensions.x, (int)_dimensions.y];
+            _gridSize = new Vector2(_cellSize * (int)_dimensions.x, _cellSize * (int)_dimensions.y);
+            for (var row = 0; row < (int)_dimensions.y; row++)
+            {
+                for (var column = 0; column < (int)_dimensions.x; column++)
+                {
+                    var position = _position - _gridSize/2 +
+                                   new Vector2(_cellSize * column + _cellSize/2, _cellSize * row + _cellSize/2);
+                    cells[column, row] = new Cell(position, _cellSize);
+                }
+            }
+            
+
+        }
+
         [Serializable]
         public class Cell
         {
+            public float size;
             public Vector2 worldPosition;
-            public Vector2 size;
             public Entity currentEntity;
 
-            public Cell(Vector2 pos, Vector2 s)
+            public Cell(Vector2 pos, float s)
             {
-                worldPosition = pos;
                 size = s;
+                worldPosition = pos;
             }
         }
     }
