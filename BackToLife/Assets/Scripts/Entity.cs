@@ -11,6 +11,11 @@ namespace BackToLife
         public EntityType type;
         public int weight;
 
+        public virtual Vector2 OnInteract(Vector2 dir)
+        {
+            return dir;
+        }
+        
         public void Destroy()
         {
             Destroy(gameObject);

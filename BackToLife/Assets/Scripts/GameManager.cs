@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace BackToLife
@@ -10,9 +11,10 @@ namespace BackToLife
         public bool winState;
         [SerializeField] private int moveStrength;
         [SerializeField] private float cellSize;
-        [SerializeField] private Block blockPrefab;
-        [SerializeField] private Block heavyBlockPrefab;
-        [SerializeField] private Block endTilePrefab;
+        [SerializeField] private RegularBlock blockPrefab;
+        [SerializeField] private HeavyBlock heavyBlockPrefab;
+        [SerializeField] private SlipperyBlock slipperyBlockPrefab;
+        [SerializeField] private EndTile endTilePrefab;
         [SerializeField] private Player playerPrefab;
         private Vector2 _dimensions;
         private GameGrid _grid;
@@ -36,6 +38,7 @@ namespace BackToLife
                         prefab = blockPrefab;
                         break;
                     case EntityType.Slippery:
+                        prefab = slipperyBlockPrefab;
                         break;
                     case EntityType.UnMovable:
                         break;
@@ -99,31 +102,38 @@ namespace BackToLife
             _endTile = null;
         }
 
+        // TODO: Move this to GameGrid and refactor object movement + make a cell hold a tile and a block
         private bool MoveInDirection(Entity entity, Vector2 dir, int moveStr)
         {
-            if (_grid.MoveInGrid(entity.gridPosition + dir))
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.normalized.x) || Mathf.Abs(dir.y) > Mathf.Abs(dir.normalized.y))
             {
-                Debug.LogWarning($"{entity} + tried moving of grid!");
+                Debug.Log(dir - dir.normalized);
+                MoveInDirection(entity, dir - dir.normalized, moveStr);
+            }
+            if (!_grid.MoveInGrid(entity.gridPosition + dir.normalized))
+            {
+                Debug.LogWarning($"{entity} tried moving of grid to {entity.gridPosition + dir.normalized}!");
                 return false;
             }
-            if (WinCondition(entity, dir))
+            if (WinCondition(entity, dir.normalized))
             {
-                entity.gridPosition += dir;
+                entity.gridPosition += dir.normalized;
                 return true;
             }
             if(moveStr < entity.weight)
                 return false;
-            if (!_grid.CellEmpty(_grid.GetCellFromGridPosition(entity.gridPosition + dir)))
+            if (!_grid.CellEmpty(_grid.GetCellFromGridPosition(entity.gridPosition + dir.normalized)))
             {
-                if (!MoveInDirection(_grid.GetCellFromGridPosition(entity.gridPosition + dir).currentEntity, dir,
-                        moveStr - entity.weight))
+                var newEnt = _grid.GetCellFromGridPosition(entity.gridPosition + dir.normalized).currentEntity;
+                if (!MoveInDirection(newEnt, newEnt.OnInteract(dir.normalized), moveStr - entity.weight))
                 {
-                    Debug.LogWarning($"{entity} + tried moving to full cell!");
+                    Debug.LogWarning($"{entity} tried moving to full cell {entity.gridPosition+dir.normalized}!");
                     return false;
                 }
             }
-            entity.gridPosition += dir;
-            Debug.Log(entity.gridPosition);
+
+            entity.gridPosition += dir.normalized;
+            Debug.Log($"{entity} moved to {entity.gridPosition}!");
             return true;
         }
 

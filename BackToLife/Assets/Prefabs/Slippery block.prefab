@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7297537256093995401}
   - component: {fileID: 7297537256093995400}
-  - component: {fileID: 3323239865570203615}
+  - component: {fileID: 7621524615072699233}
   m_Layer: 0
-  m_Name: End Tile
+  m_Name: Slippery block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7a7f56a3f0cf6f9409425c04311c435d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4810754684009314a91dc13daa80a8ec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3323239865570203615
+--- !u!114 &7621524615072699233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7297537256093995402}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b88ab0c8516d441884ed2d80b50c27a6, type: 3}
+  m_Script: {fileID: 11500000, guid: 50f2f784f4894510b78f11c9dde43795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gridPosition: {x: 0, y: 0}
@@ -100,5 +100,5 @@ MonoBehaviour:
     size: 0
     worldPosition: {x: 0, y: 0}
     currentEntity: {fileID: 0}
-  type: 5
-  weight: 32
+  type: 3
+  weight: 1

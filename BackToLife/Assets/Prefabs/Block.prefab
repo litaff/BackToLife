@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7297537256093995401}
   - component: {fileID: 7297537256093995400}
-  - component: {fileID: 7297537256093995403}
+  - component: {fileID: 2615426410953047313}
   m_Layer: 0
   m_Name: Block
   m_TagString: Untagged
@@ -72,18 +72,18 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.23318905, g: 0.20692416, b: 0.4716981, a: 1}
+  m_Sprite: {fileID: 21300000, guid: ef7f088e1a2adc648a33db4624d1efb9, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 2
+  m_DrawMode: 0
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7297537256093995403
+--- !u!114 &2615426410953047313
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,13 +92,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7297537256093995402}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1233b103ec1a4e4fb0151fde6a7e98b, type: 3}
+  m_Script: {fileID: 11500000, guid: 031ceca05c7047c89cef1fbddf23813b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gridPosition: {x: 0, y: 0}
   cell:
+    size: 0
     worldPosition: {x: 0, y: 0}
-    size: {x: 0, y: 0}
     currentEntity: {fileID: 0}
   type: 1
   weight: 1

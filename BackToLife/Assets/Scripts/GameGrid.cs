@@ -93,7 +93,7 @@ namespace BackToLife
 
         public bool MoveInGrid(Vector2 pos)
         {
-            return pos.x < 0 || pos.y < 0 || pos.x > (int)_dimensions.x-1 || pos.y > (int)_dimensions.y-1;
+            return pos.x > -1 && pos.y > -1 && pos.x < (int)_dimensions.x && pos.y < (int)_dimensions.y;
         }
 
         public bool CheckForCrampedCell(Entity first, Entity second)

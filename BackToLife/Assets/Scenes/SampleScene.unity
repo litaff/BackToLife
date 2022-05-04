@@ -1598,9 +1598,10 @@ MonoBehaviour:
   winState: 0
   moveStrength: 3
   cellSize: 0.5
-  blockPrefab: {fileID: 7297537256093995403, guid: 0d31f8b3f0208fa4f8e174b75c1112e5, type: 3}
-  heavyBlockPrefab: {fileID: 7297537256093995403, guid: 4131f4a8f979c6a40b7272d0a19caa2f, type: 3}
-  endTilePrefab: {fileID: 7297537256093995403, guid: fdfb7dd91ef9602449a70b969d164a39, type: 3}
+  blockPrefab: {fileID: 2615426410953047313, guid: 0d31f8b3f0208fa4f8e174b75c1112e5, type: 3}
+  heavyBlockPrefab: {fileID: 5803217727393680111, guid: 4131f4a8f979c6a40b7272d0a19caa2f, type: 3}
+  slipperyBlockPrefab: {fileID: 7621524615072699233, guid: 3558dbb583aaec141a3a8dd675064a10, type: 3}
+  endTilePrefab: {fileID: 3323239865570203615, guid: fdfb7dd91ef9602449a70b969d164a39, type: 3}
   playerPrefab: {fileID: 5270656449224862916, guid: bab4d77a5c7c1c440b9c26c0c97f6ff0, type: 3}
 --- !u!1 &2121392839
 GameObject:

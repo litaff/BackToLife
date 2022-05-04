@@ -23,3 +23,5 @@ MonoBehaviour:
     entityType: 2
   - gridPosition: {x: 3, y: 4}
     entityType: 5
+  - gridPosition: {x: 0, y: 2}
+    entityType: 3

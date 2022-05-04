@@ -72,12 +72,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d78cd9f45c557954dbde299c711d38cc, type: 3}
-  m_Color: {r: 0.70349574, g: 1, b: 0.6839622, a: 1}
+  m_Sprite: {fileID: 21300000, guid: c31eee0335f1ce1469f424a914730f24, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.08, y: 0.08}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -97,8 +97,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridPosition: {x: 0, y: 0}
   cell:
+    size: 0
     worldPosition: {x: 0, y: 0}
-    size: {x: 1.0833334, y: 0.9791666}
     currentEntity: {fileID: 0}
   type: 0
   weight: 0
