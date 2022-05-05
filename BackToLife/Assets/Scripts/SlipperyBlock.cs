@@ -2,11 +2,12 @@
 
 namespace BackToLife
 {
-    public class SlipperyBlock : Entity
+    public class SlipperyBlock : Block
     {
-        public override Vector2 OnInteract(Vector2 dir)
+        public int slipperiness;
+        public override Vector2 Move(Vector2 dir)
         {
-            return dir*5;
+            return new Vector2(Mathf.Sign(dir.x)*slipperiness,Mathf.Sign(dir.y)*slipperiness)*dir.normalized;
         }
     }
 }

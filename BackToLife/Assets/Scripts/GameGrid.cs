@@ -23,6 +23,67 @@ namespace BackToLife
             Init();
         }
 
+        public void MoveInDirection(Player player, Vector2 dir, int str)
+        {
+            
+            var newPos = player.gridPosition + dir;
+
+            if (!MoveInGrid(newPos))
+                return;
+            if (CellEmpty(GetCellFromGridPosition(newPos)))
+            {
+                player.gridPosition = newPos;
+            }
+            else
+            {
+                var nextEnt = GetCellFromGridPosition(newPos).currentEntity;
+                if (str < nextEnt.weight)
+                {
+                    UpdateCellsInGrid();
+                    return;
+                }
+                if (MoveBlock((Block) nextEnt, dir, str - nextEnt.weight))
+                {
+                    player.gridPosition = newPos;
+                }
+            }
+            UpdateCellsInGrid();
+        }
+        
+        /// <returns>True if moved by at least one tile</returns>
+        private bool MoveBlock(Block block, Vector2 dir, int str)
+        {
+            dir = block.Move(dir);
+            var absDir = new Vector2(Mathf.Abs(dir.x), Mathf.Abs(dir.y));
+            var iterations = absDir.x > absDir.y ? (int)absDir.x : (int)absDir.y;
+            var outcome = false;
+            for (var i = 0; i < iterations; i++)
+            {
+                var newPos = block.gridPosition + dir.normalized;
+                if (!MoveInGrid(newPos))
+                    continue;
+                if (CellEmpty(GetCellFromGridPosition(newPos)))
+                {
+                    outcome = true;
+                    block.gridPosition = newPos;
+                }
+                else
+                {
+                    var nextEnt = GetCellFromGridPosition(newPos).currentEntity;
+                    if (str < nextEnt.weight)
+                    {
+                        UpdateCellsInGrid();
+                        return false;
+                    }
+                    if (!MoveBlock((Block) nextEnt, dir, str - nextEnt.weight)) continue;
+                    outcome = true;
+                    block.gridPosition = newPos;
+                }
+            }
+            UpdateCellsInGrid();
+            return outcome;
+        }
+        
         public void Deconstruct()
         {
             foreach (var cell in cells)
@@ -86,11 +147,14 @@ namespace BackToLife
             return new Vector2(0, 0);
         }
 
+        
+        /// <returns>True if empty</returns>
         public bool CellEmpty(Cell cell)
         {
             return cell.currentEntity == null;
         }
 
+        /// <returns>True if pos is in grid</returns>
         public bool MoveInGrid(Vector2 pos)
         {
             return pos.x > -1 && pos.y > -1 && pos.x < (int)_dimensions.x && pos.y < (int)_dimensions.y;

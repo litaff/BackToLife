@@ -2,9 +2,9 @@
 
 namespace BackToLife
 {
-    public class EndTile : Block
+    public abstract class Block : Entity
     {
-        public override Vector2 Move(Vector2 dir)
+        public virtual Vector2 Move(Vector2 dir)
         {
             return dir;
         }

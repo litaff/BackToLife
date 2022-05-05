@@ -18,8 +18,8 @@ namespace BackToLife
         [SerializeField] private Player playerPrefab;
         private Vector2 _dimensions;
         private GameGrid _grid;
-        private Entity _player;
-        private Entity _endTile;
+        private Player _player;
+        private EndTile _endTile;
         private TouchController _touchController;
 
         public void InitializeGrid(GridPattern pattern)
@@ -62,9 +62,9 @@ namespace BackToLife
                 if (prefab.type != EntityType.Player && prefab.type != EntityType.EndTile)
                     continue;
                 if(prefab.type == EntityType.EndTile)
-                    _endTile = entity;
+                    _endTile = (EndTile)entity;
                 else
-                    _player = entity;
+                    _player = (Player)entity;
 
 
             }
@@ -87,7 +87,7 @@ namespace BackToLife
             _grid.UpdateCellsInWorld();
             var swipeDir = _touchController.GetSwipeDirection();
             if (swipeDir != Vector2.zero)
-                MoveInDirection(_player, swipeDir, moveStrength);
+                _grid.MoveInDirection(_player, swipeDir, moveStrength);
             winState = _grid.CheckForCrampedCell(_player, _endTile);
             _grid.UpdateCellsInGrid();
         }
@@ -100,41 +100,6 @@ namespace BackToLife
             _player = null;
             _endTile.Destroy();
             _endTile = null;
-        }
-
-        // TODO: Move this to GameGrid and refactor object movement + make a cell hold a tile and a block
-        private bool MoveInDirection(Entity entity, Vector2 dir, int moveStr)
-        {
-            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.normalized.x) || Mathf.Abs(dir.y) > Mathf.Abs(dir.normalized.y))
-            {
-                Debug.Log(dir - dir.normalized);
-                MoveInDirection(entity, dir - dir.normalized, moveStr);
-            }
-            if (!_grid.MoveInGrid(entity.gridPosition + dir.normalized))
-            {
-                Debug.LogWarning($"{entity} tried moving of grid to {entity.gridPosition + dir.normalized}!");
-                return false;
-            }
-            if (WinCondition(entity, dir.normalized))
-            {
-                entity.gridPosition += dir.normalized;
-                return true;
-            }
-            if(moveStr < entity.weight)
-                return false;
-            if (!_grid.CellEmpty(_grid.GetCellFromGridPosition(entity.gridPosition + dir.normalized)))
-            {
-                var newEnt = _grid.GetCellFromGridPosition(entity.gridPosition + dir.normalized).currentEntity;
-                if (!MoveInDirection(newEnt, newEnt.OnInteract(dir.normalized), moveStr - entity.weight))
-                {
-                    Debug.LogWarning($"{entity} tried moving to full cell {entity.gridPosition+dir.normalized}!");
-                    return false;
-                }
-            }
-
-            entity.gridPosition += dir.normalized;
-            Debug.Log($"{entity} moved to {entity.gridPosition}!");
-            return true;
         }
 
         private bool WinCondition(Entity entity, Vector2 dir)
