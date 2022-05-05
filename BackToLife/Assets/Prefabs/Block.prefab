@@ -100,5 +100,7 @@ MonoBehaviour:
     size: 0
     worldPosition: {x: 0, y: 0}
     currentEntity: {fileID: 0}
+    tile: {fileID: 0}
   type: 1
-  weight: 1
+  blockType: 1
+  blockWeight: 1

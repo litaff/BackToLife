@@ -866,6 +866,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1565190782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1565190783}
+  - component: {fileID: 1565190784}
+  m_Layer: 0
+  m_Name: Prefab manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1565190783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565190782}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1968631892}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1565190784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565190782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba53ba276c63471584d15295aa5c4483, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockPrefab: {fileID: 2615426410953047313, guid: 0d31f8b3f0208fa4f8e174b75c1112e5, type: 3}
+  heavyBlockPrefab: {fileID: 5803217727393680111, guid: 4131f4a8f979c6a40b7272d0a19caa2f, type: 3}
+  slipperyBlockPrefab: {fileID: 7621524615072699233, guid: 3558dbb583aaec141a3a8dd675064a10, type: 3}
+  endTilePrefab: {fileID: 3323239865570203615, guid: fdfb7dd91ef9602449a70b969d164a39, type: 3}
+  playerPrefab: {fileID: 5270656449224862916, guid: bab4d77a5c7c1c440b9c26c0c97f6ff0, type: 3}
 --- !u!1 &1576591538
 GameObject:
   m_ObjectHideFlags: 0
@@ -1580,6 +1628,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 823699270}
+  - {fileID: 1565190783}
   m_Father: {fileID: 1450384557}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1598,11 +1647,6 @@ MonoBehaviour:
   winState: 0
   moveStrength: 3
   cellSize: 0.5
-  blockPrefab: {fileID: 2615426410953047313, guid: 0d31f8b3f0208fa4f8e174b75c1112e5, type: 3}
-  heavyBlockPrefab: {fileID: 5803217727393680111, guid: 4131f4a8f979c6a40b7272d0a19caa2f, type: 3}
-  slipperyBlockPrefab: {fileID: 7621524615072699233, guid: 3558dbb583aaec141a3a8dd675064a10, type: 3}
-  endTilePrefab: {fileID: 3323239865570203615, guid: fdfb7dd91ef9602449a70b969d164a39, type: 3}
-  playerPrefab: {fileID: 5270656449224862916, guid: bab4d77a5c7c1c440b9c26c0c97f6ff0, type: 3}
 --- !u!1 &2121392839
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,11 +2,8 @@
 
 namespace BackToLife
 {
-    public class EndTile : Block
+    public class EndTile : Tile
     {
-        public override Vector2 Move(Vector2 dir)
-        {
-            return dir;
-        }
+        
     }
 }

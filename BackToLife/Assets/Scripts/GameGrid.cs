@@ -36,13 +36,13 @@ namespace BackToLife
             }
             else
             {
-                var nextEnt = GetCellFromGridPosition(newPos).currentEntity;
-                if (str < nextEnt.weight)
+                var nextEnt = (Block)GetCellFromGridPosition(newPos).currentEntity;
+                if (str < nextEnt.blockWeight)
                 {
                     UpdateCellsInGrid();
                     return;
                 }
-                if (MoveBlock((Block) nextEnt, dir, str - nextEnt.weight))
+                if (MoveBlock((Block) nextEnt, dir, str - nextEnt.blockWeight))
                 {
                     player.gridPosition = newPos;
                 }
@@ -69,13 +69,13 @@ namespace BackToLife
                 }
                 else
                 {
-                    var nextEnt = GetCellFromGridPosition(newPos).currentEntity;
-                    if (str < nextEnt.weight)
+                    var nextEnt = (Block)GetCellFromGridPosition(newPos).currentEntity;
+                    if (str < nextEnt.blockWeight)
                     {
                         UpdateCellsInGrid();
                         return false;
                     }
-                    if (!MoveBlock((Block) nextEnt, dir, str - nextEnt.weight)) continue;
+                    if (!MoveBlock((Block) nextEnt, dir, str - nextEnt.blockWeight)) continue;
                     outcome = true;
                     block.gridPosition = newPos;
                 }
@@ -103,10 +103,9 @@ namespace BackToLife
         {
             foreach (var cell in cells)
             {
-                if(cell.currentEntity == null)
+                if(cell.GetTransform() is null)
                     continue;
-                var transform = cell.currentEntity.transform;
-                transform.position = cell.worldPosition;
+                cell.GetTransform().position = cell.worldPosition;
             }
         }
 
@@ -115,7 +114,7 @@ namespace BackToLife
             var entities = new List<Entity>();
             foreach (var cell in cells)
             {
-                if (cell.currentEntity == null) continue;
+                if (cell.currentEntity is null) continue;
                 entities.Add(cell.currentEntity);
                 cell.currentEntity = null;
             }
@@ -160,11 +159,6 @@ namespace BackToLife
             return pos.x > -1 && pos.y > -1 && pos.x < (int)_dimensions.x && pos.y < (int)_dimensions.y;
         }
 
-        public bool CheckForCrampedCell(Entity first, Entity second)
-        {
-            return first.gridPosition == second.gridPosition;
-        }
-
         private void Init()
         {
             cells = new Cell[(int)_dimensions.x, (int)_dimensions.y];
@@ -188,11 +182,28 @@ namespace BackToLife
             public float size;
             public Vector2 worldPosition;
             public Entity currentEntity;
+            public Tile tile;
 
             public Cell(Vector2 pos, float s)
             {
                 size = s;
                 worldPosition = pos;
+            }
+
+            public Transform GetTransform()
+            {
+                Transform transform;
+                if (currentEntity == null)
+                {
+                    if (tile == null)
+                        return null;
+                    transform = tile.transform;
+                    transform.position = worldPosition;
+                }
+                else
+                    transform = currentEntity.transform;
+
+                return transform;
             }
         }
     }

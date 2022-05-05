@@ -11,63 +11,50 @@ namespace BackToLife
         public bool winState;
         [SerializeField] private int moveStrength;
         [SerializeField] private float cellSize;
-        [SerializeField] private RegularBlock blockPrefab;
-        [SerializeField] private HeavyBlock heavyBlockPrefab;
-        [SerializeField] private SlipperyBlock slipperyBlockPrefab;
-        [SerializeField] private EndTile endTilePrefab;
-        [SerializeField] private Player playerPrefab;
         private Vector2 _dimensions;
         private GameGrid _grid;
         private Player _player;
         private EndTile _endTile;
         private TouchController _touchController;
+        private PrefabManager _prefabManager;
 
         public void InitializeGrid(GridPattern pattern)
         {
             _grid = new GameGrid(cellSize ,_dimensions, transform.position);
             GetComponentInChildren<SpriteRenderer>().size = _grid.GetBackgroundSize(Vector2.one * 6 / 16);
-            Entity prefab = blockPrefab;
             foreach (var cell in pattern.cells)
             {
-                switch (cell.entityType)
-                {
-                    case EntityType.Player:
-                        prefab = playerPrefab;
-                        break;
-                    case EntityType.Regular:
-                        prefab = blockPrefab;
-                        break;
-                    case EntityType.Slippery:
-                        prefab = slipperyBlockPrefab;
-                        break;
-                    case EntityType.UnMovable:
-                        break;
-                    case EntityType.Heavy:
-                        prefab = heavyBlockPrefab;
-                        break;
-                    case EntityType.EndTile:
-                        prefab = endTilePrefab;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                var prefab = _prefabManager.GetPrefab(cell.entityType, cell.blockType, cell.tileType);
 
                 var entity = Instantiate(prefab, transform, true);
                 entity.cell = _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y];
                 entity.gridPosition = cell.gridPosition;
                 entity.type = prefab.type;
-                entity.transform.GetComponent<SpriteRenderer>().size = Vector2.one *
-                                                                       _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].size;
-                _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].currentEntity = entity;
-                if (prefab.type != EntityType.Player && prefab.type != EntityType.EndTile)
-                    continue;
-                if(prefab.type == EntityType.EndTile)
-                    _endTile = (EndTile)entity;
-                else
-                    _player = (Player)entity;
-
-
+                
+                switch (entity.type)
+                {
+                    case Entity.EntityType.Player:
+                        _player = (Player)entity;
+                        _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].currentEntity = _player;
+                        break;
+                    case Entity.EntityType.Block:
+                        var block = (Block) entity;
+                        block.blockType = cell.blockType;
+                        _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].currentEntity = block;
+                        break;
+                    case Entity.EntityType.Tile:
+                        var tile = (Tile)entity;
+                        tile.tileType = cell.tileType;
+                        _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].tile = tile;
+                        
+                        if(tile.tileType == Tile.TileType.EndTile)
+                            _endTile = (EndTile)entity;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
+            
         }
 
         public bool GetPatternData(GridPattern pattern)
@@ -80,6 +67,7 @@ namespace BackToLife
         private void Awake()
         {
             _touchController = new TouchController();
+            _prefabManager = GetComponentInChildren<PrefabManager>();
         }
 
         private void Update()
@@ -88,7 +76,6 @@ namespace BackToLife
             var swipeDir = _touchController.GetSwipeDirection();
             if (swipeDir != Vector2.zero)
                 _grid.MoveInDirection(_player, swipeDir, moveStrength);
-            winState = _grid.CheckForCrampedCell(_player, _endTile);
             _grid.UpdateCellsInGrid();
         }
 

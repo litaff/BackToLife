@@ -17,7 +17,13 @@ MonoBehaviour:
   cells:
   - gridPosition: {x: 0, y: 0}
     entityType: 0
-  - gridPosition: {x: 2, y: 1}
-    entityType: 5
+    blockType: 0
+    tileType: 0
   - gridPosition: {x: 0, y: 1}
+    entityType: 2
+    blockType: 0
+    tileType: 1
+  - gridPosition: {x: 2, y: 1}
     entityType: 1
+    blockType: 1
+    tileType: 0

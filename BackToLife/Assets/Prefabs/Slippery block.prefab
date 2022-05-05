@@ -100,6 +100,8 @@ MonoBehaviour:
     size: 0
     worldPosition: {x: 0, y: 0}
     currentEntity: {fileID: 0}
-  type: 3
-  weight: 1
+    tile: {fileID: 0}
+  type: 1
+  blockType: 3
+  blockWeight: 1
   slipperiness: 16
