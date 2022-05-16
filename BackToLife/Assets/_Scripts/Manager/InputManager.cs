@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace BackToLife
 {
-    public class TouchController
+    public class InputManager
     {
         private Vector2 _startTouchPos = Vector2.zero;
         private Vector2 _touchPos = Vector2.zero;

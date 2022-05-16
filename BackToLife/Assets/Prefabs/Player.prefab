@@ -102,3 +102,4 @@ MonoBehaviour:
     currentEntity: {fileID: 0}
     tile: {fileID: 0}
   type: 0
+  moveStrength: 2

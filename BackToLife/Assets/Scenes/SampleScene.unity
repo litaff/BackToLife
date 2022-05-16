@@ -206,21 +206,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1450384556}
-        m_TargetAssemblyTypeName: BackToLife.GameMaster, Assembly-CSharp
+      - m_Target: {fileID: 1968631893}
+        m_TargetAssemblyTypeName: BackToLife.GameManager, Assembly-CSharp
         m_MethodName: GetNextLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1450384556}
-        m_TargetAssemblyTypeName: BackToLife.GameMaster, Assembly-CSharp
-        m_MethodName: StartLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -292,12 +280,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 386822880}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1450384557}
-  m_RootOrder: 2
+  m_Father: {fileID: 1968631892}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &386822882
 MonoBehaviour:
@@ -311,9 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c1a15af34f455e924e77c8b3ce5f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridPatterns:
-  - {fileID: 11400000, guid: 5d852b40910982547b1db0227abc4b6c, type: 2}
-  - {fileID: 11400000, guid: ab68c34f940452941b067a7ae01f1a26, type: 2}
+  cellSize: 0.5
 --- !u!1 &412628485
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,6 +690,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
+--- !u!1 &1238583698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1238583699}
+  - component: {fileID: 1238583700}
+  m_Layer: 0
+  m_Name: Level manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1238583699
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238583698}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1968631892}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1238583700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238583698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4403ba5dd16a4e918f591d0d257db426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridPatterns:
+  - {fileID: 11400000, guid: 5d852b40910982547b1db0227abc4b6c, type: 2}
+  - {fileID: 11400000, guid: ab68c34f940452941b067a7ae01f1a26, type: 2}
 --- !u!1 &1373862500
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,8 +764,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1450384557}
-  m_RootOrder: 1
+  m_Father: {fileID: 1968631892}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1373862502
 MonoBehaviour:
@@ -750,56 +782,6 @@ MonoBehaviour:
   titlePage: {fileID: 1576591540}
   winPage: {fileID: 412628487}
   noFunPage: {fileID: 963028060}
---- !u!1 &1450384555
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1450384557}
-  - component: {fileID: 1450384556}
-  m_Layer: 0
-  m_Name: Game master
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1450384556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450384555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4403ba5dd16a4e918f591d0d257db426, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
-  uiManager: {fileID: 0}
-  gridManager: {fileID: 0}
-  currentPattern: {fileID: 0}
---- !u!4 &1450384557
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450384555}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1968631892}
-  - {fileID: 1373862501}
-  - {fileID: 386822881}
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1451083798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,8 +1395,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1450384556}
-        m_TargetAssemblyTypeName: BackToLife.GameMaster, Assembly-CSharp
+      - m_Target: {fileID: 1968631893}
+        m_TargetAssemblyTypeName: BackToLife.GameManager, Assembly-CSharp
         m_MethodName: StartLevel
         m_Mode: 1
         m_Arguments:
@@ -1629,8 +1611,11 @@ Transform:
   m_Children:
   - {fileID: 823699270}
   - {fileID: 1565190783}
-  m_Father: {fileID: 1450384557}
-  m_RootOrder: 0
+  - {fileID: 1238583699}
+  - {fileID: 1373862501}
+  - {fileID: 386822881}
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1968631893
 MonoBehaviour:
@@ -1645,8 +1630,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winState: 0
-  moveStrength: 3
-  cellSize: 0.5
 --- !u!1 &2121392839
 GameObject:
   m_ObjectHideFlags: 0
