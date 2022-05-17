@@ -39,7 +39,11 @@ namespace BackToLife
         {
             if(_currentPattern == null) return null;
             _uiManager.SetPageActive(Page.PageType.Title, false);
-            if (_currentPattern.Valid) return _currentPattern;
+            if (_currentPattern.Valid)
+            {
+                _uiManager.SetPageActive(Page.PageType.Game, true);
+                return _currentPattern;
+            }
             Debug.LogError($"{_currentPattern.name} is not valid!");
             return null;
 
@@ -52,8 +56,10 @@ namespace BackToLife
             if (!MorePatterns())
             {
                 _uiManager.SetPageActive(Page.PageType.NoFun, true);
+                _uiManager.SetPageActive(Page.PageType.Game, false);
                 return null;
             }
+            _uiManager.SetPageActive(Page.PageType.Game, true);
             _currentPattern = GetNextPattern();
             return _currentPattern;
 
@@ -62,8 +68,12 @@ namespace BackToLife
         public void EndLevel()
         {
             _uiManager.SetPageActive(Page.PageType.Win, true);
+            _uiManager.SetPageActive(Page.PageType.Game, false);
         }
-        
-        
+
+        public GridPattern ResetLevel()
+        {
+            return _currentPattern;
+        }
     }
 }

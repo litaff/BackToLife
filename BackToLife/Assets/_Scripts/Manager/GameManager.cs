@@ -35,7 +35,14 @@ namespace BackToLife
             _gridManager.enabled = true;
             _gridManager.InitializeGrid(_levelManager.GetNextLevel());
         }
-        
+
+        public void ResetLevel()
+        {
+            _gridManager.enabled = false;
+            _gridManager.enabled = true;
+            _gridManager.InitializeGrid(_levelManager.ResetLevel());
+        }
+
         private void Update()
         {
             if (!_gridManager.enabled) return;

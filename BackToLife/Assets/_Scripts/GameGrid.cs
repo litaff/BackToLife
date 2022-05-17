@@ -34,6 +34,11 @@ namespace BackToLife
             {
                 player.gridPosition = newPos;
             }
+            else if (!(GetCellFromGridPosition(newPos).tile is null))
+            {
+                player.gridPosition = newPos;
+                return;
+            }
             else
             {
                 var nextEnt = (Block)GetCellFromGridPosition(newPos).currentEntity;
@@ -42,7 +47,7 @@ namespace BackToLife
                     UpdateCellsInGrid();
                     return;
                 }
-                if (MoveBlock((Block) nextEnt, dir, str - nextEnt.blockWeight))
+                if (MoveBlock(nextEnt, dir, str - nextEnt.blockWeight))
                 {
                     player.gridPosition = newPos;
                 }
@@ -69,13 +74,14 @@ namespace BackToLife
                 }
                 else
                 {
+                    if (!(GetCellFromGridPosition(newPos).tile is null)) return outcome; 
                     var nextEnt = (Block)GetCellFromGridPosition(newPos).currentEntity;
                     if (str < nextEnt.blockWeight)
                     {
                         UpdateCellsInGrid();
                         return false;
                     }
-                    if (!MoveBlock((Block) nextEnt, dir, str - nextEnt.blockWeight)) continue;
+                    if (!MoveBlock(nextEnt, dir, str - nextEnt.blockWeight)) continue;
                     outcome = true;
                     block.gridPosition = newPos;
                 }
@@ -150,7 +156,7 @@ namespace BackToLife
         /// <returns>True if empty</returns>
         public bool CellEmpty(Cell cell)
         {
-            return cell.currentEntity == null;
+            return cell.currentEntity is null && cell.tile is null;
         }
 
         /// <returns>True if pos is in grid</returns>

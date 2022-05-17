@@ -8,13 +8,14 @@ namespace BackToLife
 
         public void SetActive(bool state)
         {
-            this.gameObject.SetActive(state);
+            gameObject.SetActive(state);
         }
         public enum PageType
         {
             Title,
             Win,
-            NoFun
+            NoFun,
+            Game
         }
     }
 }
