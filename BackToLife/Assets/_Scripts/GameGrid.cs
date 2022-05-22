@@ -105,13 +105,18 @@ namespace BackToLife
             return _gridSize + offset;
         }
 
-        public void UpdateCellsInWorld()
+        public void UpdateCellsInWorld(float updateSpeed)
         {
             foreach (var cell in cells)
             {
                 if(cell.GetTransform() is null)
                     continue;
-                cell.GetTransform().position = cell.worldPosition;
+                var trans = cell.GetTransform();
+
+                if ((Vector2)trans.position != cell.worldPosition)
+                {
+                    trans.position = Vector2.Lerp(trans.position, cell.worldPosition, updateSpeed*Time.deltaTime);
+                }
             }
         }
 
@@ -199,12 +204,12 @@ namespace BackToLife
             public Transform GetTransform()
             {
                 Transform transform;
-                if (currentEntity == null)
+                if (currentEntity is null)
                 {
-                    if (tile == null)
+                    if (tile is null)
                         return null;
                     transform = tile.transform;
-                    transform.position = worldPosition;
+                    //transform.position = worldPosition;
                 }
                 else
                     transform = currentEntity.transform;

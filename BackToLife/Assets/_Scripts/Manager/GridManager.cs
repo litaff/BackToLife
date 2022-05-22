@@ -14,9 +14,9 @@ namespace BackToLife
         private EndTile _endTile;
         private PrefabManager _prefabManager;
 
-        public void GameUpdate(Vector2 swipeDir)
+        public void GameUpdate(Vector2 swipeDir, float updateSpeed)
         {
-            _grid.UpdateCellsInWorld();
+            _grid.UpdateCellsInWorld(updateSpeed);
             if (swipeDir != Vector2.zero)
                 _grid.MoveInDirection(_player, swipeDir, _player.moveStrength);
             _grid.UpdateCellsInGrid();
@@ -66,7 +66,7 @@ namespace BackToLife
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            
+            _grid.UpdateCellsInWorld(10000000); // instant update
         }
         
         

@@ -9,6 +9,7 @@ namespace BackToLife
     public class GameManager : MonoBehaviour
     {
         public bool winState;
+        public float gridUpdateSpeed;
         private InputManager _inputManager;
         private GridManager _gridManager;
 
@@ -46,7 +47,7 @@ namespace BackToLife
         private void Update()
         {
             if (!_gridManager.enabled) return;
-            _gridManager.GameUpdate(_inputManager.GetSwipeDirection());
+            _gridManager.GameUpdate(_inputManager.GetSwipeDirection(),gridUpdateSpeed);
             if (!_gridManager.WinCondition()) return;
             _levelManager.EndLevel();
             _gridManager.enabled = false;

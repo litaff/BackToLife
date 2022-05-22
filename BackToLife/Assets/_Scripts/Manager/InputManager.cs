@@ -23,21 +23,9 @@ namespace BackToLife
         {
             if (Input.touchCount != 1)
                 return Vector2.zero;
-            if (Input.touchCount == 0)
-            {
-                ResetTouch();
-                return Vector2.zero;
-            }
-            /*if (EventSystem.current.IsPointerOverGameObject())
-            {
-                Debug.Log("Clicked on the UI");
-                ResetTouch();
-                return Vector2.zero;
-            }*/
-            
+
             if(IsOverUI())
             {
-                Debug.Log("Clicked on the UI");
                 ResetTouch();
                 return Vector2.zero;
             }
