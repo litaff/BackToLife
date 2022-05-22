@@ -9,6 +9,7 @@ namespace BackToLife
         [SerializeField] private HeavyBlock heavyBlockPrefab;
         [SerializeField] private SlipperyBlock slipperyBlockPrefab;
         [SerializeField] private EndTile endTilePrefab;
+        [SerializeField] private TeleportTile teleportTilePrefab;
         [SerializeField] private Player playerPrefab;
         
         public Entity GetPrefab(Entity.EntityType entityType, Block.BlockType blockType, Tile.TileType tileType)
@@ -47,7 +48,7 @@ namespace BackToLife
                             return endTilePrefab;
  
                         case Tile.TileType.TeleportTile:
-                            break;
+                            return teleportTilePrefab;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(tileType), tileType, null);
                     }

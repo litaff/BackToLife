@@ -17,7 +17,7 @@ namespace BackToLife
 
         private void OnValidate()
         {
-            Valid = CheckForValidType() && CheckPlayer() && CheckForEndTile();
+            Valid = CheckForValidType() && CheckPlayer() && CheckForEndTile() && CheckForTeleportTile();
         }
 
         
@@ -38,50 +38,47 @@ namespace BackToLife
         private bool CheckForEndTile()
         {
             var tiles = (from cell in cells
-                where cell.entityType == Entity.EntityType.Tile
+                where cell.tileType == Tile.TileType.EndTile
                 select cell).ToList();
-            if (tiles.Count(tile => tile.tileType == Tile.TileType.EndTile) < 1)
+            if (tiles.Count < 1)
                 Debug.LogWarning($"{name} has less than one end tile");
-            else if (tiles.Count(tile => tile.tileType == Tile.TileType.EndTile) > 1)
+            else if (tiles.Count > 1)
                 Debug.LogWarning($"{name} has more than one end tile");
             return tiles.Count == 1;
         }
+        
+        /// <returns>True if each teleport tile has a link</returns>
+        private bool CheckForTeleportTile()
+        {
+            var tiles = (from cell in cells
+                where cell.tileType == Tile.TileType.TeleportTile
+                select cell).ToList();
+            if(tiles.Count%2 != 0)
+                Debug.LogWarning($"{name} has an orphan teleport tile");
+
+            return tiles.Count%2 == 0;
+        }
+        
         /// <returns>True if types are correct</returns>
         private bool CheckForValidType()
         {
-            /*var blockNotTile= (from cell in cells
-                where cell.entityType == Entity.EntityType.Block
-                select cell).ToList();
-            var tileNotBlock= (from cell in cells
-                where cell.entityType == Entity.EntityType.Tile
-                select cell).ToList();
-            if (blockNotTile.Any(cell => cell.tileType != Tile.TileType.None))
-            {
-                Debug.LogWarning($"{name} has a mixed up type at {cells.FindIndex(c => true)}");
-                return false;
-            }
-            // ReSharper disable once InvertIf
-            if (tileNotBlock.Any(cell => cell.blockType != Block.BlockType.None))
-            {
-                Debug.LogWarning($"{name} has a mixed up type at {cells.FindIndex(c => true)}");
-                return false;
-            }*/
+            
 
             foreach (var cell in cells)
             {
-                if (cell.entityType == Entity.EntityType.Player)
+                switch (cell.entityType)
                 {
-                    cell.blockType = Block.BlockType.None;
-                    cell.tileType = Tile.TileType.None;
+                    case Entity.EntityType.Player:
+                        cell.blockType = Block.BlockType.None;
+                        cell.tileType = Tile.TileType.None;
+                        break;
+                    case Entity.EntityType.Block:
+                        cell.tileType = Tile.TileType.None;
+                        break;
+                    case Entity.EntityType.Tile:
+                        cell.blockType = Block.BlockType.None;
+                        break;
                 }
-
-                if (cell.entityType == Entity.EntityType.Block)
-                    cell.tileType = Tile.TileType.None;
-                if (cell.entityType == Entity.EntityType.Tile)
-                    cell.blockType = Block.BlockType.None;
-
-
-
             }
             
             return true;

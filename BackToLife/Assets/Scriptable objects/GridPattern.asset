@@ -19,39 +19,15 @@ MonoBehaviour:
     entityType: 0
     blockType: 0
     tileType: 0
-  - gridPosition: {x: 6, y: 13}
+  - gridPosition: {x: 1, y: 2}
     entityType: 2
     blockType: 0
     tileType: 1
-  - gridPosition: {x: 0, y: 1}
-    entityType: 1
-    blockType: 3
-    tileType: 0
   - gridPosition: {x: 1, y: 1}
-    entityType: 1
-    blockType: 3
-    tileType: 0
-  - gridPosition: {x: 1, y: 2}
-    entityType: 1
-    blockType: 3
-    tileType: 0
-  - gridPosition: {x: 2, y: 1}
-    entityType: 1
-    blockType: 3
-    tileType: 0
-  - gridPosition: {x: 2, y: 3}
-    entityType: 1
-    blockType: 3
-    tileType: 0
-  - gridPosition: {x: 3, y: 1}
-    entityType: 1
-    blockType: 3
-    tileType: 0
-  - gridPosition: {x: 3, y: 2}
-    entityType: 1
-    blockType: 3
-    tileType: 0
-  - gridPosition: {x: 3, y: 4}
-    entityType: 1
-    blockType: 3
-    tileType: 0
+    entityType: 2
+    blockType: 0
+    tileType: 2
+  - gridPosition: {x: 5, y: 5}
+    entityType: 2
+    blockType: 0
+    tileType: 2

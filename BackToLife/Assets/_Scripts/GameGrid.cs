@@ -72,9 +72,12 @@ namespace BackToLife
                     outcome = true;
                     block.gridPosition = newPos;
                 }
+                else if (!(GetCellFromGridPosition(newPos).tile is null))
+                {
+                    return outcome;
+                }
                 else
                 {
-                    if (!(GetCellFromGridPosition(newPos).tile is null)) return outcome; 
                     var nextEnt = (Block)GetCellFromGridPosition(newPos).currentEntity;
                     if (str < nextEnt.blockWeight)
                     {
@@ -94,9 +97,10 @@ namespace BackToLife
         {
             foreach (var cell in cells)
             {
-                if(cell.currentEntity == null) continue;
-                
-                cell.currentEntity.Destroy();
+                if(cell.currentEntity)
+                    cell.currentEntity.Destroy();
+                if(cell.tile)
+                    cell.tile.Destroy();
             }
         }
 
@@ -120,9 +124,21 @@ namespace BackToLife
             }
         }
 
+        public void InstantUpdateCellsInWorld()
+        {
+            UpdateCellsInWorld(1000000);
+        }
+
         public void UpdateCellsInGrid()
         {
             var entities = new List<Entity>();
+            var tiles = (from Cell cell in cells where !(cell.tile is null) select cell.tile).ToList();
+
+            foreach (var tile in tiles)
+            {
+                tile.OnInteract();
+            }
+            
             foreach (var cell in cells)
             {
                 if (cell.currentEntity is null) continue;
@@ -134,6 +150,9 @@ namespace BackToLife
             {
                 cells[(int) entity.gridPosition.x, (int) entity.gridPosition.y].currentEntity = entity;
                 entity.cell = cells[(int) entity.gridPosition.x, (int) entity.gridPosition.y];
+                if (!entity.cell.tile) continue;
+                if(entity.cell.tile.GetType() == typeof(TeleportTile))
+                    InstantUpdateCellsInWorld();
             }
             
         }

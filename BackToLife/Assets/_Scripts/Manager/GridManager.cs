@@ -13,6 +13,7 @@ namespace BackToLife
         private Player _player;
         private EndTile _endTile;
         private PrefabManager _prefabManager;
+        private TeleportTile _firstTeleportTile;
 
         public void GameUpdate(Vector2 swipeDir, float updateSpeed)
         {
@@ -58,16 +59,37 @@ namespace BackToLife
                         var tile = (Tile)entity;
                         tile.tileType = cell.tileType;
                         _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].tile = tile;
-                        
-                        if(tile.tileType == Tile.TileType.EndTile)
-                            _endTile = (EndTile)entity;
+
+                        switch (tile.tileType)
+                        {
+                            case Tile.TileType.TeleportTile:
+                                if(_firstTeleportTile is null)
+                                    _firstTeleportTile = (TeleportTile)tile;
+                                else
+                                {
+                                    LinkTeleportTiles(_firstTeleportTile, (TeleportTile)tile);
+                                    _firstTeleportTile = null;
+                                }
+                                break;
+                            case Tile.TileType.EndTile:
+                                _endTile = (EndTile)entity;
+                                break;
+                        }
+
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            _grid.UpdateCellsInWorld(10000000); // instant update
+            _grid.InstantUpdateCellsInWorld();
+
+            void LinkTeleportTiles(TeleportTile firstTile, TeleportTile secondTile)
+            {
+                firstTile.linked = secondTile;
+                secondTile.linked = firstTile;
+            }
         }
+        
         
         
         private void Awake()
@@ -78,10 +100,12 @@ namespace BackToLife
         private void OnDisable()
         {
             _grid?.Deconstruct();
-            _player?.Destroy();
-            _player = null;
-            _endTile?.Destroy();
+            if(_player)
+                _player.Destroy();
+            if(_endTile)
+                _endTile.Destroy();
             _endTile = null;
+            _player = null;
         }
         
         public bool WinCondition()

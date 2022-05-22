@@ -1,8 +1,16 @@
-﻿namespace BackToLife
+﻿using UnityEngine;
+
+namespace BackToLife
 {
-    public class Tile : Entity
+    public abstract class Tile : Entity
     {
         public TileType tileType;
+
+        public virtual bool OnInteract()
+        {
+            return false;
+        }
+
         
         public enum TileType
         {
