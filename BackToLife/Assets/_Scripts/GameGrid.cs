@@ -74,6 +74,7 @@ namespace BackToLife
                 }
                 else if (!(GetCellFromGridPosition(newPos).tile is null))
                 {
+                    
                     return outcome;
                 }
                 else
@@ -82,6 +83,7 @@ namespace BackToLife
                     if (str < nextEnt.blockWeight)
                     {
                         UpdateCellsInGrid();
+                        
                         return false;
                     }
                     if (!MoveBlock(nextEnt, dir, str - nextEnt.blockWeight)) continue;
@@ -90,6 +92,7 @@ namespace BackToLife
                 }
             }
             UpdateCellsInGrid();
+            
             return outcome;
         }
         
@@ -119,7 +122,14 @@ namespace BackToLife
 
                 if ((Vector2)trans.position != cell.worldPosition)
                 {
-                    trans.position = Vector2.Lerp(trans.position, cell.worldPosition, updateSpeed*Time.deltaTime);
+                    var position = trans.position;
+                    position = Vector2.Lerp(position, cell.worldPosition, updateSpeed*Time.deltaTime);
+                    trans.position = position;
+
+                }
+                else if(cell.tile is null)
+                {
+                    ParticleManager.StopParticle(trans);
                 }
             }
         }

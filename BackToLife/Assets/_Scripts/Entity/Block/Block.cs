@@ -9,6 +9,7 @@ namespace BackToLife
         public int blockWeight;
         public virtual Vector2 Move(Vector2 dir)
         {
+            
             return dir;
         }
         

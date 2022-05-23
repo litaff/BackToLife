@@ -6,9 +6,9 @@ namespace BackToLife
     {
         public TileType tileType;
 
-        public virtual bool OnInteract()
+        public virtual void OnInteract()
         {
-            return false;
+            
         }
 
         

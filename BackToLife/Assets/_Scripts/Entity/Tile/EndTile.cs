@@ -4,9 +4,9 @@ namespace BackToLife
 {
     public class EndTile : Tile
     {
-        public override bool OnInteract()
+        public override void OnInteract()
         {
-            return base.OnInteract();
+            base.OnInteract();
         }
     }
 }

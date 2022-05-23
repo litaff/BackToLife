@@ -7,7 +7,8 @@ namespace BackToLife
         public int slipperiness;
         public override Vector2 Move(Vector2 dir)
         {
-            return slipperiness*dir.normalized;
+            ParticleManager.PlayParticle(transform,ParticleManager.Particle.ParticleType.Ice,dir);
+            return base.Move(slipperiness*dir.normalized);
         }
     }
 }
