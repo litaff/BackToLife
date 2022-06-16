@@ -15,7 +15,6 @@ namespace BackToLife
         {
             _particleOwners = new List<ParticleOwner>();
             _particles = previewParticles;
-            print("Particles loaded");
         }
 
         private void Update()
