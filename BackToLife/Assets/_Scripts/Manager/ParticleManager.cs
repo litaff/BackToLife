@@ -7,8 +7,8 @@ namespace BackToLife
 {
     public class ParticleManager : MonoBehaviour
     {
-        private static List<Particle> _particles;
         public List<Particle> previewParticles;
+        private static List<Particle> _particles;
         private static List<ParticleOwner> _particleOwners;
 
         private void Awake()
@@ -19,13 +19,23 @@ namespace BackToLife
 
         private void Update()
         {
-            foreach (var particleOwner in _particleOwners.Where(particleOwner => !particleOwner.particleSystem.isPlaying).ToList())
+            for (var i = _particleOwners.Count - 1; i >= 0; i--)
             {
-                _particleOwners.Remove(particleOwner);
-                Destroy(particleOwner.particleSystem.gameObject);
+                if (_particleOwners[i].particleSystem)
+                {
+                    _particleOwners[i] = _particleOwners[_particleOwners.Count - 1];
+                    _particleOwners.RemoveAt(_particleOwners.Count - 1);
+                }
+                else
+                {
+                    if (_particleOwners[i].particleSystem.isPlaying) continue;
+                    var owner = _particleOwners[i];
+                    _particleOwners.Remove(owner);
+                    Destroy(owner.particleSystem.gameObject);
+                }
             }
         }
-
+        
         public static void PlayParticle(Transform transform, Particle.ParticleType type, Vector2 dir)
         {
             dir = dir.normalized;
@@ -69,6 +79,7 @@ namespace BackToLife
             return result;
         }
 
+        [Serializable]
         private class ParticleOwner
         {
             public readonly ParticleSystem particleSystem;
