@@ -13,14 +13,16 @@ namespace BackToLife
         [Range(4,9)]
         public int nrOfColumns;
         public List<Cell> cells;
-        public bool Valid { get; private set; }
+
+        public bool Valid => CheckForValidType() && CheckPlayer() && CheckForEndTile() && CheckForTeleportTile();
 
         private void OnValidate()
         {
-            Valid = CheckForValidType() && CheckPlayer() && CheckForEndTile() && CheckForTeleportTile();
+            CheckForValidType();
+            CheckPlayer();
+            CheckForEndTile();
+            CheckForTeleportTile();
         }
-
-        
 
         /// <returns>True if exactly one player</returns>
         private bool CheckPlayer()
