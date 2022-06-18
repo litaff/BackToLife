@@ -21,7 +21,7 @@ namespace BackToLife
         {
             for (var i = _particleOwners.Count - 1; i >= 0; i--)
             {
-                if (_particleOwners[i].particleSystem)
+                if (!_particleOwners[i].particleSystem)
                 {
                     _particleOwners[i] = _particleOwners[_particleOwners.Count - 1];
                     _particleOwners.RemoveAt(_particleOwners.Count - 1);
@@ -29,9 +29,8 @@ namespace BackToLife
                 else
                 {
                     if (_particleOwners[i].particleSystem.isPlaying) continue;
-                    var owner = _particleOwners[i];
-                    _particleOwners.Remove(owner);
-                    Destroy(owner.particleSystem.gameObject);
+                    Destroy(_particleOwners[i].particleSystem.gameObject);
+                    _particleOwners.Remove(_particleOwners[i]);
                 }
             }
         }
