@@ -37,14 +37,13 @@ namespace BackToLife
             else if (!(GetCellFromGridPosition(newPos).tile is null))
             {
                 player.gridPosition = newPos;
-                return;
             }
             else
             {
                 var nextEnt = (Block)GetCellFromGridPosition(newPos).currentEntity;
                 if (str < nextEnt.blockWeight)
                 {
-                    UpdateCellsInGrid();
+                    //UpdateCellsInGrid();
                     return;
                 }
                 if (MoveBlock(nextEnt, dir, str - nextEnt.blockWeight))
@@ -52,7 +51,7 @@ namespace BackToLife
                     player.gridPosition = newPos;
                 }
             }
-            UpdateCellsInGrid();
+            //UpdateCellsInGrid();
         }
         
         /// <returns>True if moved by at least one tile</returns>
@@ -74,7 +73,6 @@ namespace BackToLife
                 }
                 else if (!(GetCellFromGridPosition(newPos).tile is null))
                 {
-                    
                     return outcome;
                 }
                 else
@@ -82,8 +80,7 @@ namespace BackToLife
                     var nextEnt = (Block)GetCellFromGridPosition(newPos).currentEntity;
                     if (str < nextEnt.blockWeight)
                     {
-                        UpdateCellsInGrid();
-                        
+                        //UpdateCellsInGrid();
                         return false;
                     }
                     if (!MoveBlock(nextEnt, dir, str - nextEnt.blockWeight)) continue;
@@ -123,7 +120,10 @@ namespace BackToLife
                 if ((Vector2)trans.position != cell.worldPosition)
                 {
                     var position = trans.position;
-                    position = Vector2.Lerp(position, cell.worldPosition, updateSpeed*Time.deltaTime);
+                    position = Vector2.Lerp(
+                        position, 
+                        updateSpeed < 100 ? NextPosition(position, cell.worldPosition) : cell.worldPosition, 
+                        updateSpeed*Time.deltaTime);
                     trans.position = position;
 
                 }
@@ -131,6 +131,26 @@ namespace BackToLife
                 {
                     ParticleManager.StopParticle(trans);
                 }
+            }
+
+            Vector2 NextPosition(Vector2 curr, Vector2 end)
+            {
+                var dist2D = new Vector2(Mathf.Abs(end.x - curr.x), Mathf.Abs(end.y - curr.y));
+                var nextPos = end;
+                var delta = _cellSize;
+                if (dist2D.x > dist2D.y)
+                {
+                    if (!(Math.Abs(curr.x + Mathf.Sign(end.x - curr.x) * delta - end.x) > 0.00000001)) return nextPos;
+                    delta = delta > dist2D.x ? dist2D.x : delta;
+                    nextPos = new Vector2(Mathf.Sign(end.x - curr.x) * delta + curr.x, curr.y);
+                }
+                else if (dist2D.x < dist2D.y)
+                {
+                    if (!(Math.Abs(curr.y + Mathf.Sign(end.y - curr.y) * delta - end.y) > 0.00000001)) return nextPos;
+                    delta = delta > dist2D.y ? dist2D.y : delta;
+                    nextPos = new Vector2(curr.x, Mathf.Sign(end.y - curr.y) * delta + curr.y);
+                }
+                return nextPos;
             }
         }
 

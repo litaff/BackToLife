@@ -421,12 +421,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d7805dacfd44f179831ec225f2c41be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 1606789380}
   uiPages:
   - {fileID: 2068046149498233513, guid: b597969fb30301d4f9e9e7ca1bb68b54, type: 3}
   - {fileID: 2659349599316910056, guid: a9ab5828d50cd3c42ba71c309ca7c713, type: 3}
   - {fileID: 2258968659676061523, guid: db01284da84144048b1c75c9cc54ffe1, type: 3}
   - {fileID: 7405939892823395186, guid: fa93a6092f94c5f4e840a43996be4742, type: 3}
+  canvas: {fileID: 1606789380}
 --- !u!1 &1451083798
 GameObject:
   m_ObjectHideFlags: 0
