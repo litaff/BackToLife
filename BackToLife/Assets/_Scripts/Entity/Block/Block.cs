@@ -4,12 +4,11 @@ namespace BackToLife
 {
     public abstract class Block : Entity
     {
-        public BlockType blockType;
-        
         public int blockWeight;
+        public BlockType blockType;
+
         public virtual Vector2 Move(Vector2 dir)
         {
-            
             return dir;
         }
         
@@ -17,7 +16,7 @@ namespace BackToLife
         {
             None,
             Regular,
-            Heavy,
+            Slime,
             Slippery,
             UnMovable
         }
