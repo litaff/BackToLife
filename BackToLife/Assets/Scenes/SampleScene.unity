@@ -536,8 +536,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba53ba276c63471584d15295aa5c4483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockPrefab: {fileID: 2615426410953047313, guid: 0d31f8b3f0208fa4f8e174b75c1112e5, type: 3}
-  heavyBlockPrefab: {fileID: 5803217727393680111, guid: 4131f4a8f979c6a40b7272d0a19caa2f, type: 3}
+  regularBlockPrefab: {fileID: 2615426410953047313, guid: 0d31f8b3f0208fa4f8e174b75c1112e5, type: 3}
+  slimeBlockPrefab: {fileID: 5803217727393680111, guid: 4131f4a8f979c6a40b7272d0a19caa2f, type: 3}
   slipperyBlockPrefab: {fileID: 7621524615072699233, guid: 3558dbb583aaec141a3a8dd675064a10, type: 3}
   endTilePrefab: {fileID: 3323239865570203615, guid: fdfb7dd91ef9602449a70b969d164a39, type: 3}
   teleportTilePrefab: {fileID: 3323239865570203615, guid: dab1ce342a473e648affe518a4280a64, type: 3}
@@ -691,6 +691,8 @@ MonoBehaviour:
     type: 1
   - particleSystem: {fileID: 2756679564108369003, guid: fb392bb5c4f1929408115f6328c362f3, type: 3}
     type: 2
+  - particleSystem: {fileID: 2756679564108369003, guid: 6a831991975f5b0468375b442d920de1, type: 3}
+    type: 3
 --- !u!1 &1968631891
 GameObject:
   m_ObjectHideFlags: 0

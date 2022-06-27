@@ -55,12 +55,16 @@ namespace BackToLife
         }
         
         /// <returns>True if moved by at least one tile</returns>
-        private bool MoveBlock(Block block, Vector2 dir, int str)
+        private bool MoveBlock(Block block, Vector2 dir, int str, bool chain = false)
         {
             dir = block.Move(dir);
+            if (chain)
+                dir = dir.normalized;
             var absDir = new Vector2(Mathf.Abs(dir.x), Mathf.Abs(dir.y));
             var iterations = absDir.x > absDir.y ? (int)absDir.x : (int)absDir.y;
             var outcome = false;
+            
+            // forward chain movement
             for (var i = 0; i < iterations; i++)
             {
                 var newPos = block.gridPosition + dir.normalized;
@@ -83,11 +87,30 @@ namespace BackToLife
                         //UpdateCellsInGrid();
                         return false;
                     }
-                    if (!MoveBlock(nextEnt, dir, str - nextEnt.blockWeight)) continue;
+                    if(block is SlimeBlock) // to stop slippery block from sliding while near slime block
+                        if (!MoveBlock(nextEnt, dir, str - nextEnt.blockWeight,true)) continue;
+                    if(!(block is SlimeBlock))
+                        if (!MoveBlock(nextEnt, dir, str - nextEnt.blockWeight)) continue;
                     outcome = true;
                     block.gridPosition = newPos;
                 }
             }
+            
+            // side chain movement
+            if(block is SlimeBlock && outcome)
+            {
+                var chainPosition = new List<Vector2>
+                {
+                    block.gridPosition + new Vector2(dir.normalized.y, dir.normalized.x) - dir.normalized,
+                    block.gridPosition - new Vector2(dir.normalized.y, dir.normalized.x) - dir.normalized
+                };
+                var blocksToMove = chainPosition.Select(vector2 => (Block) GetCellFromGridPosition(vector2).currentEntity).ToList();
+                foreach (var b in blocksToMove.Where(b => b))
+                {
+                    MoveBlock(b, dir, str, true);
+                }
+            }
+
             UpdateCellsInGrid();
             
             return outcome;

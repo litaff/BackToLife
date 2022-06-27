@@ -67,12 +67,9 @@ namespace BackToLife
         private static Particle GetParticle(Particle.ParticleType type)
         {
             var result = new Particle();
-            foreach (var particle in _particles)
+            foreach (var particle in _particles.Where(particle => particle.type == type))
             {
-                if (particle.type == Particle.ParticleType.Default)
-                    result = particle;
-                if (particle.type == type)
-                    result = particle;
+                result = particle;
             }
 
             return result;
@@ -100,7 +97,8 @@ namespace BackToLife
             {
                 Default,
                 Ice,
-                Magic
+                Magic,
+                Slime
             }
         }
     }

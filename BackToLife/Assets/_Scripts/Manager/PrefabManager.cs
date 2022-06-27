@@ -5,8 +5,8 @@ namespace BackToLife
 {
     public class PrefabManager : MonoBehaviour
     {
-        [SerializeField] private RegularBlock blockPrefab;
-        [SerializeField] private HeavyBlock heavyBlockPrefab;
+        [SerializeField] private RegularBlock regularBlockPrefab;
+        [SerializeField] private SlimeBlock slimeBlockPrefab;
         [SerializeField] private SlipperyBlock slipperyBlockPrefab;
         [SerializeField] private EndTile endTilePrefab;
         [SerializeField] private TeleportTile teleportTilePrefab;
@@ -25,10 +25,10 @@ namespace BackToLife
                         case Block.BlockType.None:
                             break;
                         case Block.BlockType.Regular:
-                            return blockPrefab;
+                            return regularBlockPrefab;
 
-                        case Block.BlockType.Heavy:
-                            return heavyBlockPrefab;
+                        case Block.BlockType.Slime:
+                            return slimeBlockPrefab;
 
                         case Block.BlockType.Slippery:
                             return slipperyBlockPrefab;
