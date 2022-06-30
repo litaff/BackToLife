@@ -9,7 +9,7 @@ namespace BackToLife
     [Serializable]
     public class GameGrid
     {
-        public Cell[,] cells;
+        public GameCell[,] cells;
         private float _cellSize;
         private Vector2 _dimensions;
         private Vector2 _gridSize;
@@ -185,7 +185,7 @@ namespace BackToLife
         public void UpdateCellsInGrid()
         {
             var entities = new List<Entity>();
-            var tiles = (from Cell cell in cells where !(cell.tile is null) select cell.tile).ToList();
+            var tiles = (from GameCell cell in cells where !(cell.tile is null) select cell.tile).ToList();
 
             foreach (var tile in tiles)
             {
@@ -210,12 +210,12 @@ namespace BackToLife
             
         }
 
-        public Cell GetCellFromGridPosition(Vector2 pos)
+        public GameCell GetCellFromGridPosition(Vector2 pos)
         {
             return cells[(int)pos.x, (int)pos.y];
         }
 
-        public Vector2 GetGridPositionFromCell(Cell cell)
+        public Vector2 GetGridPositionFromCell(GameCell cell)
         {
             for (var column = 0; column < (int)_dimensions.x; column++)
             {
@@ -231,7 +231,7 @@ namespace BackToLife
 
         
         /// <returns>True if empty</returns>
-        public bool CellEmpty(Cell cell)
+        public bool CellEmpty(GameCell cell)
         {
             return cell.currentEntity is null && cell.tile is null;
         }
@@ -244,7 +244,7 @@ namespace BackToLife
 
         private void Init()
         {
-            cells = new Cell[(int)_dimensions.x, (int)_dimensions.y];
+            cells = new GameCell[(int)_dimensions.x, (int)_dimensions.y];
             _gridSize = new Vector2(_cellSize * (int)_dimensions.x, _cellSize * (int)_dimensions.y);
             for (var row = 0; row < (int)_dimensions.y; row++)
             {
@@ -252,7 +252,7 @@ namespace BackToLife
                 {
                     var position = _position - _gridSize/2 +
                                    new Vector2(_cellSize * column + _cellSize/2, _cellSize * row + _cellSize/2);
-                    cells[column, row] = new Cell(position, _cellSize);
+                    cells[column, row] = new GameCell(position, _cellSize);
                 }
             }
             
@@ -260,14 +260,14 @@ namespace BackToLife
         }
 
         [Serializable]
-        public class Cell
+        public class GameCell
         {
             public float size;
             public Vector2 worldPosition;
             public Entity currentEntity;
             public Tile tile;
 
-            public Cell(Vector2 pos, float s)
+            public GameCell(Vector2 pos, float s)
             {
                 size = s;
                 worldPosition = pos;

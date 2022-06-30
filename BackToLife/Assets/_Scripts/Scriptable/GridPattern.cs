@@ -12,7 +12,7 @@ namespace BackToLife
         public int nrOfRows;
         [Range(4,9)]
         public int nrOfColumns;
-        public List<Cell> cells;
+        public List<PatternCell> cells;
 
         public bool Valid => CheckForValidType() && CheckPlayer() && CheckForEndTile() && CheckForTeleportTile();
 
@@ -87,7 +87,7 @@ namespace BackToLife
         }
 
         [Serializable]
-        public class Cell
+        public class PatternCell
         {
             public Vector2 gridPosition;
             public Entity.EntityType entityType;
