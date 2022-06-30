@@ -17,12 +17,6 @@ namespace BackToLife
             _currentPattern = GetNextPattern();
         }
 
-        private void Start()
-        {
-            _uiManager.SetPageActive(Page.PageType.Title, true);
-        }
-        
-
         private bool MorePatterns()
         {
             return gridPatterns.Count > 0;
@@ -38,10 +32,8 @@ namespace BackToLife
         public GridPattern StartLevel()
         {
             if(_currentPattern == null) return null;
-            _uiManager.SetPageActive(Page.PageType.Title, false);
             if (_currentPattern.Valid)
             {
-                _uiManager.SetPageActive(Page.PageType.Game, true);
                 return _currentPattern;
             }
             Debug.LogError($"{_currentPattern.name} is not valid!");
@@ -56,19 +48,12 @@ namespace BackToLife
             if (!MorePatterns())
             {
                 _uiManager.SetPageActive(Page.PageType.NoFun, true);
-                _uiManager.SetPageActive(Page.PageType.Game, false);
+                _uiManager.SetPageActive(Page.PageType.Gameplay, false);
                 return null;
             }
-            _uiManager.SetPageActive(Page.PageType.Game, true);
+            _uiManager.SetPageActive(Page.PageType.Gameplay, true);
             _currentPattern = GetNextPattern();
             return _currentPattern;
-
-        }
-        
-        public void EndLevel()
-        {
-            _uiManager.SetPageActive(Page.PageType.Win, true);
-            _uiManager.SetPageActive(Page.PageType.Game, false);
         }
 
         public GridPattern ResetLevel()

@@ -12,6 +12,7 @@ namespace BackToLife
         [SerializeField] private Canvas canvas;
         private readonly List<Page> _uiPages = new List<Page>();
         private GameManager _gameManager;
+        private SceneManager _sceneManager;
 
         private void Awake()
         {
@@ -20,23 +21,32 @@ namespace BackToLife
                                  $"only the first one will be active");
 
             _gameManager = GetComponentInParent<GameManager>();
+            _sceneManager = transform.parent.GetComponentInChildren<SceneManager>();
             
             foreach (var newPage in uiPages.Select(page => Instantiate(page, canvas.transform)))
             {
                 newPage.SetActive(false);
-                var button = newPage.GetComponentInChildren<Button>();
+                var buttons = newPage.GetComponentsInChildren<Button>();
                 switch (newPage.type)
                 {
                     case Page.PageType.Title:
-                        button.onClick.AddListener(_gameManager.StartLevel);
+                        foreach (var button in buttons)
+                        {
+                            if(button.CompareTag("Tutorial button"))
+                                button.onClick.AddListener(_gameManager.StartLevel);
+                            if (button.CompareTag("Level browser button"))
+                                button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Browser));
+                        }
                         break;
                     case Page.PageType.Win:
-                        button.onClick.AddListener(_gameManager.GetNextLevel);
+                        buttons[0].onClick.AddListener(_gameManager.GetNextLevel);
                         break;
                     case Page.PageType.NoFun:
                         break;
-                    case Page.PageType.Game:
-                        button.onClick.AddListener(_gameManager.ResetLevel);
+                    case Page.PageType.Gameplay:
+                        buttons[0].onClick.AddListener(_gameManager.ResetLevel);
+                        break;
+                    case Page.PageType.Browser:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -52,6 +62,7 @@ namespace BackToLife
                 page.SetActive(state);
             }
         }
+        
         
         
     }

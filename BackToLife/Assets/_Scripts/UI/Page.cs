@@ -15,7 +15,8 @@ namespace BackToLife
             Title,
             Win,
             NoFun,
-            Game
+            Gameplay,
+            Browser
         }
     }
 }
