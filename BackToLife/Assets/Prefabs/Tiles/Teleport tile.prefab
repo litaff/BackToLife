@@ -72,8 +72,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7a7f56a3f0cf6f9409425c04311c435d, type: 3}
-  m_Color: {r: 0.8679245, g: 0.20879315, b: 0.74257416, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 7ff6d4a4fdabea34db5f8f7f284a6d21, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -103,4 +103,5 @@ MonoBehaviour:
     tile: {fileID: 0}
   type: 2
   tileType: 2
-  id: 0
+  linked: {fileID: 0}
+  used: 0

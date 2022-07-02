@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace BackToLife
@@ -13,6 +14,13 @@ namespace BackToLife
         [Range(4,9)]
         public int nrOfColumns;
         public List<PatternCell> cells;
+        // TODO: move this \/ stupid mess to GridPatternEditorWindow.cs you dumb banana
+        [HideInInspector] public Texture player;
+        [HideInInspector] public Texture regularBlock;
+        [HideInInspector] public Texture slipperyBlock;
+        [HideInInspector] public Texture slimeBlock;
+        [HideInInspector] public Texture teleportTile;
+        [HideInInspector] public Texture endTile;
 
         public bool Valid => CheckForValidType() && CheckPlayer() && CheckForEndTile() && CheckForTeleportTile();
 
@@ -22,8 +30,30 @@ namespace BackToLife
             CheckPlayer();
             CheckForEndTile();
             CheckForTeleportTile();
+            RemoveCellOutOfBounds();
+            player = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Characters/soul_v2.png", typeof(Texture2D));
+            regularBlock = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Blocks/regular_block.png", typeof(Texture2D));
+            slipperyBlock = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Blocks/slippery_block.png", typeof(Texture2D));
+            slimeBlock = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Blocks/slime_block.png", typeof(Texture2D));
+            teleportTile = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Tiles/teleport_tile.png", typeof(Texture2D));
+            endTile = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Tiles/end_tile.png", typeof(Texture2D));
         }
 
+        private void RemoveCellOutOfBounds()
+        {
+            foreach (var cell in cells.ToList())
+            {
+                if (cell.gridPosition.x >= nrOfColumns)
+                {
+                    cells.Remove(cell);
+                }
+                else if (cell.gridPosition.y >= nrOfRows)
+                {
+                    cells.Remove(cell);
+                }
+            }
+        }
+        
         /// <returns>True if exactly one player</returns>
         private bool CheckPlayer()
         {

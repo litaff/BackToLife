@@ -17,8 +17,7 @@ namespace BackToLife
             None,
             Regular,
             Slime,
-            Slippery,
-            UnMovable
+            Slippery
         }
     }
 }

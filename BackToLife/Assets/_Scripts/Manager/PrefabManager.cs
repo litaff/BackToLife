@@ -32,9 +32,6 @@ namespace BackToLife
 
                         case Block.BlockType.Slippery:
                             return slipperyBlockPrefab;
-
-                        case Block.BlockType.UnMovable:
-                            break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(blockType), blockType, null);
                     }

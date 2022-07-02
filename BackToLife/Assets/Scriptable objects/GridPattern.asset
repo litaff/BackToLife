@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bc59b775b70459c943c82a3e5cbeb1f, type: 3}
   m_Name: GridPattern
   m_EditorClassIdentifier: 
-  nrOfRows: 14
+  nrOfRows: 16
   nrOfColumns: 7
   cells:
   - gridPosition: {x: 0, y: 0}
@@ -23,3 +23,9 @@ MonoBehaviour:
     entityType: 2
     blockType: 0
     tileType: 1
+  player: {fileID: 2800000, guid: c31eee0335f1ce1469f424a914730f24, type: 3}
+  regularBlock: {fileID: 2800000, guid: e92b65836f7d53948b7c6c9969f4dbcc, type: 3}
+  slipperyBlock: {fileID: 2800000, guid: 4810754684009314a91dc13daa80a8ec, type: 3}
+  slimeBlock: {fileID: 2800000, guid: 961ea8194dfbca642a1898d4eecc3a3a, type: 3}
+  teleportTile: {fileID: 2800000, guid: 7ff6d4a4fdabea34db5f8f7f284a6d21, type: 3}
+  endTile: {fileID: 2800000, guid: 7a7f56a3f0cf6f9409425c04311c435d, type: 3}
