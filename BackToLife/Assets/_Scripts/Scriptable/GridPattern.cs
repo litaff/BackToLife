@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-
-// TODO: move validation to editor window
 
 namespace BackToLife
 {
@@ -44,38 +41,30 @@ namespace BackToLife
         }
         
         /// <returns>True if exactly one player</returns>
-        private bool CheckPlayer()
+        public bool CheckPlayer()
         {
             var players = (from cell in cells 
                 where cell.entityType == Entity.EntityType.Player 
                 select cell).ToList();
-            if (players.Count < 1)
-                Debug.LogWarning($"{name} has less than one player");
-            else if (players.Count > 1)
-                Debug.LogWarning($"{name} has more than one player");
+            
             return players.Count == 1;
         }
         /// <returns>True if exactly one end tile</returns>
-        private bool CheckForEndTile()
+        public bool CheckForEndTile()
         {
             var tiles = (from cell in cells
                 where cell.tileType == Tile.TileType.EndTile
                 select cell).ToList();
-            if (tiles.Count < 1)
-                Debug.LogWarning($"{name} has less than one end tile");
-            else if (tiles.Count > 1)
-                Debug.LogWarning($"{name} has more than one end tile");
+
             return tiles.Count == 1;
         }
         
         /// <returns>True if each teleport tile has a link</returns>
-        private bool CheckForTeleportTile()
+        public bool CheckForTeleportTile()
         {
             var tiles = (from cell in cells
                 where cell.tileType == Tile.TileType.TeleportTile
                 select cell).ToList();
-            if(tiles.Count%2 != 0)
-                Debug.LogWarning($"{name} has an orphan teleport tile");
 
             return tiles.Count%2 == 0;
         }

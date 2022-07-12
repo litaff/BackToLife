@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using NUnit.Framework;
 using UnityEditor;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
-using Random = UnityEngine.Random;
-
-// TODO: implement cell validation 
 
 namespace BackToLife
 {
@@ -19,9 +12,9 @@ namespace BackToLife
         #region Cell window
 
         private GridPattern.PatternCell _currentCell;
-        private Rect _windowRect = new Rect(100, 100, 200, 200);
+        private Rect _windowRect = new Rect(100, 100, 250, 150);
         private bool _windowOpen;
-        private string _currentWindowID; // first digit is x, second digit is y || 9 decimal separator
+        private string _currentWindowID; // first digit is x, second digit is y || format => 9x9y
 
         #endregion
 
@@ -63,9 +56,11 @@ namespace BackToLife
 
         private void OnGUI()
         {
-            BeginWindows();
+            PatternErrors();
+            
             _target.nrOfRows = EditorGUILayout.IntSlider("Nr Of Rows", _target.nrOfRows, 8, 16);
             _target.nrOfColumns = EditorGUILayout.IntSlider("Nr Of Columns", _target.nrOfColumns, 4, 9);
+            
             for (var i = _target.nrOfRows-1; i >= 0; i--)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -94,8 +89,9 @@ namespace BackToLife
                 }
                 EditorGUILayout.EndHorizontal();
             }
+            BeginWindows();
             if (_windowOpen)
-                _windowRect = GUILayout.Window(int.Parse(_currentWindowID), _windowRect, DoWindow, "hi there");
+                _windowRect = GUILayout.Window(int.Parse(_currentWindowID), _windowRect, DoWindow, "Cell editor");
             EndWindows();
         }
         
@@ -123,16 +119,19 @@ namespace BackToLife
                 }
             }
 
-            cordX = ReverseString(cordX);
-            cordY = ReverseString(cordY);
+            cordX = Helper.ReverseString(cordX);
+            cordY = Helper.ReverseString(cordY);
 
             _currentCell ??= new GridPattern.PatternCell
             {
                 gridPosition = new Vector2(int.Parse(cordX), int.Parse(cordY))
             };
+
+            // readonly position
+            GUI.enabled = false;
+            EditorGUILayout.Vector2Field("Grid Position", _currentCell.gridPosition);
+            GUI.enabled = true;
             
-            _currentCell.gridPosition = 
-                EditorGUILayout.Vector2Field("Grid Position", _currentCell.gridPosition);
             _currentCell.entityType =
                 (Entity.EntityType) EditorGUILayout.EnumPopup("Entity type", _currentCell.entityType);
             switch (_currentCell.entityType)
@@ -172,7 +171,15 @@ namespace BackToLife
             GUI.DragWindow();
         }
 
-        
+        private void PatternErrors()
+        {
+            if(!_target.CheckPlayer())
+                EditorGUILayout.HelpBox("The player count is not correct! (expected 1)", MessageType.Error);
+            if(!_target.CheckForEndTile())
+                EditorGUILayout.HelpBox("The end tile count is not correct! (expected 1)", MessageType.Error);
+            if(!_target.CheckForTeleportTile())
+                EditorGUILayout.HelpBox("The number of teleport tiles is odd! (expected even)", MessageType.Error);
+        }
         
         private Texture2D GetTexture(Entity.EntityType entityType, Block.BlockType blockType, Tile.TileType tileType)
         {
@@ -218,15 +225,6 @@ namespace BackToLife
         private GridPattern.PatternCell GetPatternCellFromPosition(int x, int y)
         {
             return _target.cells.FirstOrDefault(cell => cell.gridPosition == new Vector2(x, y));
-        }
-        
-        private string ReverseString(string str) {  
-            var chars = str.ToCharArray();  
-            var result = new char[chars.Length];  
-            for (int i = 0, j = str.Length - 1; i < str.Length; i++, j--) {  
-                result[i] = chars[j];  
-            }  
-            return new string(result);  
         }
     }
 }
