@@ -27,30 +27,8 @@ namespace BackToLife
             {
                 newPage.SetActive(false);
                 var buttons = newPage.GetComponentsInChildren<Button>();
-                switch (newPage.type)
-                {
-                    case Page.PageType.Title:
-                        foreach (var button in buttons)
-                        {
-                            if(button.CompareTag("Tutorial button"))
-                                button.onClick.AddListener(_gameManager.StartLevel);
-                            if (button.CompareTag("Level browser button"))
-                                button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Browser));
-                        }
-                        break;
-                    case Page.PageType.Win:
-                        buttons[0].onClick.AddListener(_gameManager.GetNextLevel);
-                        break;
-                    case Page.PageType.NoFun:
-                        break;
-                    case Page.PageType.Gameplay:
-                        buttons[0].onClick.AddListener(_gameManager.ResetLevel);
-                        break;
-                    case Page.PageType.Browser:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                foreach (var button in buttons)
+                    AddListenerToButton(button);
                 _uiPages.Add(newPage);
             }
         }
@@ -62,8 +40,29 @@ namespace BackToLife
                 page.SetActive(state);
             }
         }
-        
-        
+
+        public void SetAllPagesActive(bool state)
+        {
+            foreach (var page in _uiPages)
+            {
+                page.SetActive(state);
+            }
+        }
+
+        private void AddListenerToButton(Button button)
+        {
+            if(button.CompareTag("Tutorial button"))
+                button.onClick.AddListener(_gameManager.StartLevel);
+            if (button.CompareTag("Level browser button"))
+                button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Browser));
+            if (button.CompareTag("Main menu button"))
+            {
+                button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Menu));
+                button.onClick.AddListener(_gameManager.EndAll);
+            }
+            if(button.CompareTag("Reset button"))
+                button.onClick.AddListener(_gameManager.ResetLevel);
+        }
         
     }
 }
