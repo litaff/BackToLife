@@ -7,24 +7,22 @@ namespace BackToLife
     public class SceneManager : MonoBehaviour
     {
         private UIManager _uiManager;
-        private LevelManager _levelManager;
 
         private void Awake()
         {
             var parent = transform.parent;
             _uiManager = parent.GetComponentInChildren<UIManager>();
-            _levelManager = parent.GetComponentInChildren<LevelManager>();
         }
 
         public UnityAction LoadScene(SceneType scene)
         {
             UnityAction action = scene switch
             {
-                SceneType.Title => LoadTitle,
+                SceneType.Menu => LoadTitle,
                 SceneType.Gameplay => LoadGameplay,
                 SceneType.Browser => LoadBrowser,
                 SceneType.Editor => LoadEditor,
-                SceneType.Progress => LoadProgress,
+                SceneType.EndLevel => LoadEndLevel,
                 _ => throw new ArgumentOutOfRangeException(nameof(scene), scene, null)
             };
 
@@ -33,38 +31,41 @@ namespace BackToLife
 
         private void LoadTitle()
         {
-            _uiManager.SetPageActive(Page.PageType.Title, true);
+            _uiManager.SetAllPagesActive(false);
+            _uiManager.SetPageActive(Page.PageType.Menu, true);
         }
 
         private void LoadGameplay()
         {
-            _uiManager.SetPageActive(Page.PageType.Title, false);
+            _uiManager.SetAllPagesActive(false);
             _uiManager.SetPageActive(Page.PageType.Gameplay, true);
         }
 
         private void LoadBrowser()
         {
-            _uiManager.SetPageActive(Page.PageType.Title,false);
+            _uiManager.SetAllPagesActive(false);
             _uiManager.SetPageActive(Page.PageType.Browser,true);
         }
 
         private void LoadEditor()
         {
+            _uiManager.SetAllPagesActive(false);
         }
 
-        private void LoadProgress()
+        private void LoadEndLevel()
         {
-            _uiManager.SetPageActive(Page.PageType.Win, true);
-            _uiManager.SetPageActive(Page.PageType.Gameplay, false);
+            _uiManager.SetAllPagesActive(false);
+            _uiManager.SetPageActive(Page.PageType.EndLevel, true);
         }
+        
         
         public enum SceneType
         {
-            Title,
+            Menu,
             Gameplay,
             Browser,
             Editor,
-            Progress
+            EndLevel
         }
     }
 }

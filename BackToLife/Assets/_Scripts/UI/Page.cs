@@ -12,8 +12,8 @@ namespace BackToLife
         }
         public enum PageType
         {
-            Title,
-            Win,
+            Menu,
+            EndLevel,
             NoFun,
             Gameplay,
             Browser
