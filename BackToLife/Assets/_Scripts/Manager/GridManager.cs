@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace BackToLife
@@ -12,14 +13,22 @@ namespace BackToLife
         private GameGrid _grid;
         private Player _player;
         private EndTile _endTile;
-        private PrefabManager _prefabManager;
         private TeleportTile _firstTeleportTile;
+        private PrefabManager _prefabManager;
+        private LineRenderer _lineRenderer;
 
         public void GameUpdate(Vector2 swipeDir, float updateSpeed)
         {
             _grid.UpdateCellsInWorld(updateSpeed);
             if (swipeDir != Vector2.zero)
                 _grid.MoveInDirection(_player, swipeDir, _player.moveStrength);
+            _grid.UpdateCellsInGrid();
+        }
+
+        public void EditorUpdate()
+        {
+            _grid.InstantUpdateCellsInWorld();
+            DebugGrid();
             _grid.UpdateCellsInGrid();
         }
 
@@ -89,12 +98,65 @@ namespace BackToLife
                 secondTile.linked = firstTile;
             }
         }
-        
-        
+
+        private void DebugGrid()
+        {
+            var points = new List<Vector3>();
+            var gridSize = new Vector2(cellSize * (int)_dimensions.x, cellSize * (int)_dimensions.y);
+            var startPos = (Vector2) transform.position - gridSize / 2;
+            for (var row = 0; row <= (int)_dimensions.y; row++)
+            {
+                if (row % 2 == 0)
+                {
+                    for (var column = 0; column <= (int)_dimensions.x; column++)
+                    {
+                        var position = startPos +
+                                       new Vector2(cellSize * column, cellSize * row);
+                        points.Add(position);
+                    }
+                }
+                else
+                {
+                    for (var column = (int)_dimensions.x; column >= 0; column--)
+                    {
+                        var position = startPos +
+                                       new Vector2(cellSize * column, cellSize * row);
+                        points.Add(position);
+                    }
+                }
+            }
+
+            startPos = points.Last();
+            for (var column = 0; column <= (int)_dimensions.x; column++)
+            {
+                if (column % 2 == 0)
+                {
+                    for (var row = 0; row <= (int)_dimensions.y; row++)
+                    {
+                        var position = startPos -
+                                       new Vector2(cellSize * column, cellSize * row) * new Vector2(_dimensions.y%2 == 0 ? 1 : -1,1);
+                        points.Add(position);
+                    }
+                }
+                else
+                {
+                    for (var row = (int)_dimensions.y; row >= 0; row--)
+                    {
+                        var position = startPos -
+                                       new Vector2(cellSize * column, cellSize * row) * new Vector2(_dimensions.y%2 == 0 ? 1 : -1,1);
+                        points.Add(position);
+                    }
+                }
+            }
+
+            _lineRenderer.positionCount = points.Count;
+            _lineRenderer.SetPositions(points.ToArray());
+        }
         
         private void Awake()
         {
             _prefabManager = gameObject.transform.parent.GetComponentInChildren<PrefabManager>();
+            _lineRenderer = GetComponent<LineRenderer>();
         }
         
         private void OnDisable()
@@ -106,6 +168,8 @@ namespace BackToLife
                 _endTile.Destroy();
             _endTile = null;
             _player = null;
+            gameObject.transform.parent.GetComponentInChildren<SpriteRenderer>().size = new Vector2(1, 1);
+            _lineRenderer.positionCount = 0;
         }
         
         public bool WinCondition()

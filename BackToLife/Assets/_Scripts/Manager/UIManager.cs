@@ -13,18 +13,26 @@ namespace BackToLife
         private readonly List<Page> _uiPages = new List<Page>();
         private GameManager _gameManager;
         private SceneManager _sceneManager;
+        private BrowserManager _browserManager;
+        private EditorManager _editorManager;
 
         private void Awake()
         {
+            var parent = transform.parent;
+            
             if(uiPages.Count != uiPages.Distinct().Count())
                 Debug.LogWarning($"{gameObject.name} has more than one page of the same type, " +
                                  $"only the first one will be active");
 
             _gameManager = GetComponentInParent<GameManager>();
-            _sceneManager = transform.parent.GetComponentInChildren<SceneManager>();
+            _sceneManager = parent.GetComponentInChildren<SceneManager>();
+            _browserManager = parent.GetComponentInChildren<BrowserManager>();
+            _editorManager = parent.GetComponentInChildren<EditorManager>();
             
             foreach (var newPage in uiPages.Select(page => Instantiate(page, canvas.transform)))
             {
+                if (newPage.type == Page.PageType.Size)
+                    _editorManager.sliderHandler = newPage.GetComponent<SliderHandler>();
                 newPage.SetActive(false);
                 var buttons = newPage.GetComponentsInChildren<Button>();
                 foreach (var button in buttons)
@@ -51,17 +59,50 @@ namespace BackToLife
 
         private void AddListenerToButton(Button button)
         {
-            if(button.CompareTag("Tutorial button"))
+            if (button.CompareTag("Tutorial button"))
+            {
                 button.onClick.AddListener(_gameManager.StartLevel);
+                button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Gameplay));
+                return;
+            }
+
             if (button.CompareTag("Level browser button"))
+            {
                 button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Browser));
+                return;
+            }
             if (button.CompareTag("Main menu button"))
             {
                 button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Menu));
                 button.onClick.AddListener(_gameManager.EndAll);
+                return;
             }
-            if(button.CompareTag("Reset button"))
+
+            if (button.CompareTag("Reset button"))
+            {
                 button.onClick.AddListener(_gameManager.ResetLevel);
+                return;
+            }
+
+            if (button.CompareTag("Editor button"))
+            {
+                button.onClick.AddListener(_gameManager.StartEditor);
+                button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Editor));
+                return;
+            }
+            
+            if (button.CompareTag("Size button"))
+            {
+                button.onClick.AddListener(() => SetPageActive(Page.PageType.Size, true));
+                return;
+            }
+
+            if (button.CompareTag("Size confirm button"))
+            {
+                button.onClick.AddListener(_editorManager.OnPatternChange);
+                button.onClick.AddListener(() => SetPageActive(Page.PageType.Size, false));
+                return;
+            }
         }
         
     }

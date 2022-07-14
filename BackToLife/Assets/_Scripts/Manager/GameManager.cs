@@ -16,6 +16,7 @@ namespace BackToLife
         private GridManager _gridManager;
         private LevelManager _levelManager;
         private SceneManager _sceneManager;
+        private EditorManager _editorManager;
 
         
         private void Awake()
@@ -24,19 +25,27 @@ namespace BackToLife
             _levelManager = GetComponentInChildren<LevelManager>();
             _gridManager = GetComponentInChildren<GridManager>();
             _sceneManager = GetComponentInChildren<SceneManager>();
+            _editorManager = GetComponentInChildren<EditorManager>();
             _gridManager.enabled = false;
+            _editorManager.enabled = false;
         }
 
         private void Start()
         {
             _sceneManager.LoadScene(SceneManager.SceneType.Menu).Invoke();
+            EditorManager.PatternChange += () => _gridManager.InitializeGrid(_levelManager.ResetLevel());
         }
 
         public void StartLevel()
         {
             _gridManager.enabled = true;
             _gridManager.InitializeGrid(_levelManager.StartLevel());
-            _sceneManager.LoadScene(SceneManager.SceneType.Gameplay).Invoke();
+        }
+
+        public void StartEditor()
+        {
+            _gridManager.enabled = true;
+            _gridManager.InitializeGrid(_levelManager.BlankLevel());
         }
 
         public void ResetLevel()
@@ -53,11 +62,19 @@ namespace BackToLife
 
         private void Update()
         {
-            if (!_gridManager.enabled) return;
-            _gridManager.GameUpdate(_inputManager.GetSwipeDirection(),gridUpdateSpeed);
-            if (!_gridManager.WinCondition()) return;
-            _sceneManager.LoadScene(SceneManager.SceneType.EndLevel).Invoke();
-            _gridManager.enabled = false;
+            if (_sceneManager.loadedScene == SceneManager.SceneType.Editor)
+            {
+                if (!_gridManager.enabled) return;
+                _gridManager.EditorUpdate();
+            }
+            else
+            {
+                if (!_gridManager.enabled) return;
+                _gridManager.GameUpdate(_inputManager.GetSwipeDirection(),gridUpdateSpeed);
+                if (!_gridManager.WinCondition()) return;
+                _sceneManager.LoadScene(SceneManager.SceneType.EndLevel).Invoke();
+                _gridManager.enabled = false;
+            }
         }
     }
 }

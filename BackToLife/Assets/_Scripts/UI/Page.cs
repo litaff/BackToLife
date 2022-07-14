@@ -14,9 +14,10 @@ namespace BackToLife
         {
             Menu,
             EndLevel,
-            NoFun,
             Gameplay,
-            Browser
+            Browser,
+            Editor,
+            Size
         }
     }
 }
