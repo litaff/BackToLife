@@ -9,6 +9,11 @@ TagManager:
   - Level browser button
   - Main menu button
   - Reset button
+  - Test button
+  - Validate button
+  - Editor button
+  - Size button
+  - Size confirm button
   layers:
   - Default
   - TransparentFX
