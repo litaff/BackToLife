@@ -255,8 +255,6 @@ namespace BackToLife
                     cells[column, row] = new GameCell(position, _cellSize);
                 }
             }
-            
-
         }
 
         [Serializable]
