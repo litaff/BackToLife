@@ -33,7 +33,7 @@ namespace BackToLife
         private void Start()
         {
             _sceneManager.LoadScene(SceneManager.SceneType.Menu).Invoke();
-            EditorManager.PatternChange += () => _gridManager.InitializeGrid(_levelManager.ResetLevel());
+            LevelManager.PatternChange += () => _gridManager.InitializeGrid(_levelManager.ResetLevel());
         }
 
         public void StartLevel()
@@ -45,6 +45,7 @@ namespace BackToLife
         public void StartEditor()
         {
             _gridManager.enabled = true;
+            _editorManager.enabled = true;
             _gridManager.InitializeGrid(_levelManager.BlankLevel());
         }
 
@@ -62,6 +63,11 @@ namespace BackToLife
 
         private void Update()
         {
+            if (_sceneManager.loadedScene == SceneManager.SceneType.Menu)
+            {
+                _gridManager.enabled = false;
+                _editorManager.enabled = false;
+            }
             if (_sceneManager.loadedScene == SceneManager.SceneType.Editor)
             {
                 if (!_gridManager.enabled) return;

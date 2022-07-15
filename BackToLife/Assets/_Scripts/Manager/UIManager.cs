@@ -32,7 +32,9 @@ namespace BackToLife
             foreach (var newPage in uiPages.Select(page => Instantiate(page, canvas.transform)))
             {
                 if (newPage.type == Page.PageType.Size)
-                    _editorManager.sliderHandler = newPage.GetComponent<SliderHandler>();
+                    _editorManager.sliderHandler = newPage.GetComponent<SizeSliderHandler>();
+                if (newPage.type == Page.PageType.CellMod)
+                    _editorManager.cellModHandler = newPage.GetComponent<CellModHandler>();
                 newPage.SetActive(false);
                 var buttons = newPage.GetComponentsInChildren<Button>();
                 foreach (var button in buttons)
@@ -99,8 +101,22 @@ namespace BackToLife
 
             if (button.CompareTag("Size confirm button"))
             {
-                button.onClick.AddListener(_editorManager.OnPatternChange);
+                button.onClick.AddListener(_editorManager.Resize);
                 button.onClick.AddListener(() => SetPageActive(Page.PageType.Size, false));
+                return;
+            }
+
+            if (button.CompareTag("Delete cell button"))
+            {
+                button.onClick.AddListener(_editorManager.Delete);
+                button.onClick.AddListener(() => SetPageActive(Page.PageType.CellMod, false));
+                return;
+            }
+
+            if (button.CompareTag("Submit cell button"))
+            {
+                button.onClick.AddListener(_editorManager.Modify);
+                button.onClick.AddListener(() => SetPageActive(Page.PageType.CellMod, false));
                 return;
             }
         }

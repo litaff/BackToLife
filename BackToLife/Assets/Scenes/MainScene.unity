@@ -474,6 +474,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 1606789380}
   sliderHandler: {fileID: 0}
+  cellModHandler: {fileID: 0}
 --- !u!1 &1238583698
 GameObject:
   m_ObjectHideFlags: 0

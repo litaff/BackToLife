@@ -8,14 +8,14 @@ using UnityEngine.UI;
 
 namespace BackToLife
 {
-    public class SliderHandler : MonoBehaviour
+    public class SizeSliderHandler : MonoBehaviour
     {
         public GameObject row;
         public GameObject column;
         private SizeSlider _rows;
         private SizeSlider _columns;
 
-        public Vector2 GetSliderSize()
+        public Vector2 GetSize()
         {
             return new Vector2(_columns.slider.value, _rows.slider.value);
         }

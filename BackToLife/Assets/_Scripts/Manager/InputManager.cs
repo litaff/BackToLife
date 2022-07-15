@@ -24,7 +24,7 @@ namespace BackToLife
             if (Input.touchCount != 1)
                 return Vector2.zero;
 
-            if(IsOverUI())
+            if(Helper.IsOverUI())
             {
                 ResetTouch();
                 return Vector2.zero;
@@ -65,16 +65,13 @@ namespace BackToLife
             return Vector2.zero;
         }
 
-
-        private PointerEventData _eventDataCurrentPosition;
-        private List<RaycastResult> _results;
-        private bool IsOverUI()
+        public Vector2 GetTouchPosition()
         {
-            _eventDataCurrentPosition = new PointerEventData(EventSystem.current) {position = Input.mousePosition};
-            _results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(_eventDataCurrentPosition,_results);
-            return _results.Count > 0;
+            if(Input.touchCount < 1 || Helper.IsOverUI()) return new Vector2(10,10); // out of screen
+            var touch = Input.GetTouch(0);
+            return Helper.GetCamera().ScreenToWorldPoint(touch.position);
         }
+        
         private void ResetTouch()
         {
             _swiping = false;

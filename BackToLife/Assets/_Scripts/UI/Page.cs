@@ -17,7 +17,8 @@ namespace BackToLife
             Gameplay,
             Browser,
             Editor,
-            Size
+            Size,
+            CellMod
         }
     }
 }
