@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -56,6 +57,28 @@ namespace BackToLife
             foreach (var page in _uiPages)
             {
                 page.SetActive(state);
+            }
+        }
+
+        private void Update()
+        {
+            if (_sceneManager.loadedScene == SceneManager.SceneType.Editor)
+            {
+                
+                if (_uiPages.Where(page => page.type == Page.PageType.CellMod).Any(page => page.gameObject.activeSelf))
+                {
+                    SetPageActive(Page.PageType.Size, false);
+                    return;
+                }
+                if (_uiPages.Where(page => page.type == Page.PageType.Size).Any(page => page.gameObject.activeSelf))
+                {
+                    return;
+                }
+                if (Helper.IsOverUI()) return;
+                
+                if (!_editorManager.OpenCellMod()) return;
+                
+                SetPageActive(Page.PageType.CellMod, true);
             }
         }
 

@@ -40,6 +40,8 @@ namespace BackToLife
                 return;
             }
             
+            _grid?.Dispose(); // dispose of whatever is left
+            
             _dimensions.x = pattern.nrOfColumns;
             _dimensions.y = pattern.nrOfRows;
             _grid = new GameGrid(cellSize ,_dimensions, transform.position);
@@ -68,7 +70,6 @@ namespace BackToLife
                         var tile = (Tile)entity;
                         tile.tileType = cell.tileType;
                         _grid.cells[(int) cell.gridPosition.x, (int) cell.gridPosition.y].tile = tile;
-
                         switch (tile.tileType)
                         {
                             case Tile.TileType.TeleportTile:
@@ -87,6 +88,7 @@ namespace BackToLife
 
                         break;
                     default:
+                        print($"{entity.type.ToString()}");
                         throw new ArgumentOutOfRangeException();
                 }
             }
@@ -161,7 +163,7 @@ namespace BackToLife
         
         private void OnDisable()
         {
-            _grid?.Deconstruct();
+            _grid?.Dispose();
             if(_player)
                 _player.Destroy();
             if(_endTile)

@@ -33,5 +33,14 @@ namespace BackToLife
             EventSystem.current.RaycastAll(_eventDataCurrentPosition,_results);
             return _results.Count > 0;
         }
+
+        public static void DisplayGridPattern(GridPattern pattern)
+        {
+            Debug.Log($"Pattern: {pattern.name}");
+            foreach (var cell in pattern.cells)
+            {
+                Debug.Log($"Grid Position: {cell.gridPosition}, Entity: {cell.entityType}");
+            }
+        }
     }
 }

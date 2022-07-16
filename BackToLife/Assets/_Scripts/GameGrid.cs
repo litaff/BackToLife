@@ -7,7 +7,7 @@ using UnityEngine;
 namespace BackToLife
 {
     [Serializable]
-    public class GameGrid
+    public class GameGrid : IDisposable
     {
         public GameCell[,] cells;
         private float _cellSize;
@@ -116,7 +116,7 @@ namespace BackToLife
             return outcome;
         }
         
-        public void Deconstruct()
+        public void Dispose()
         {
             foreach (var cell in cells)
             {

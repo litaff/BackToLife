@@ -17,6 +17,7 @@ namespace BackToLife
         
         public enum EntityType
         {
+            None,
             Player,
             Block,
             Tile
