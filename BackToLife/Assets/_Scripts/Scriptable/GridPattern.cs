@@ -72,8 +72,6 @@ namespace BackToLife
         /// <returns>True if types are correct</returns>
         private bool CheckForValidType()
         {
-            
-
             foreach (var cell in cells)
             {
                 switch (cell.entityType)
@@ -101,6 +99,27 @@ namespace BackToLife
             public Entity.EntityType entityType;
             public Block.BlockType blockType;
             public Tile.TileType tileType;
+
+            public PatternCell()
+            {
+                
+            }
+            
+            public PatternCell(PatternCell cell)
+            {
+                gridPosition = cell.gridPosition;
+                entityType = cell.entityType;
+                blockType = cell.blockType;
+                tileType = cell.tileType;
+            }
+
+            public void ChangeTo(PatternCell cell)
+            {
+                gridPosition = cell.gridPosition;
+                entityType = cell.entityType;
+                blockType = cell.blockType;
+                tileType = cell.tileType;
+            }
         }
     }
 }

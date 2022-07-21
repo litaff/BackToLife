@@ -12,14 +12,17 @@ namespace BackToLife
         #region Cell window
 
         private GridPattern.PatternCell _currentCell;
+        private GridPattern.PatternCell _currentCellCopy;
         private Rect _windowRect = new Rect(100, 100, 250, 150);
         private bool _windowOpen;
         private string _currentWindowID; // first digit is x, second digit is y || format => 9x9y
+        private bool _newCell;
 
         #endregion
 
         #region Textures
 
+        [HideInInspector] public Texture2D defaultTex;
         [HideInInspector] public Texture2D player;
         [HideInInspector] public Texture2D regularBlock;
         [HideInInspector] public Texture2D slipperyBlock;
@@ -34,6 +37,8 @@ namespace BackToLife
             var window = GetWindow<GridPatternEditorWindow>($"Grid Pattern Editor {gridPattern.name}");
             window._target = gridPattern;
             
+            window.defaultTex =(Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Characters/soul_v2.png", 
+                typeof(Texture2D));
             window.player = 
                 (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Sprites/Characters/soul_v2.png", 
                     typeof(Texture2D));
@@ -121,30 +126,38 @@ namespace BackToLife
 
             cordX = Helper.ReverseString(cordX);
             cordY = Helper.ReverseString(cordY);
-
-            _currentCell ??= new GridPattern.PatternCell
+            
+            if (_currentCell is null)
             {
-                gridPosition = new Vector2(int.Parse(cordX), int.Parse(cordY))
-            };
+                _currentCell = new GridPattern.PatternCell
+                {
+                    gridPosition = new Vector2(int.Parse(cordX), int.Parse(cordY))
+                };
+                _newCell = true;
+            }
 
+            _currentCellCopy ??= new GridPattern.PatternCell(_currentCell);
+            
             // readonly position
             GUI.enabled = false;
-            EditorGUILayout.Vector2Field("Grid Position", _currentCell.gridPosition);
+            EditorGUILayout.Vector2Field("Grid Position", _currentCellCopy.gridPosition);
             GUI.enabled = true;
             
-            _currentCell.entityType =
-                (Entity.EntityType) EditorGUILayout.EnumPopup("Entity type", _currentCell.entityType);
-            switch (_currentCell.entityType)
+            _currentCellCopy.entityType =
+                (Entity.EntityType) EditorGUILayout.EnumPopup("Entity type", _currentCellCopy.entityType);
+            switch (_currentCellCopy.entityType)
             {
                 case Entity.EntityType.Player:
                     break;
                 case Entity.EntityType.Block:
-                    _currentCell.blockType =
-                        (Block.BlockType) EditorGUILayout.EnumPopup("Block type", _currentCell.blockType);
+                    _currentCellCopy.blockType =
+                        (Block.BlockType) EditorGUILayout.EnumPopup("Block type", _currentCellCopy.blockType);
                     break;
                 case Entity.EntityType.Tile:
-                    _currentCell.tileType = 
-                        (Tile.TileType) EditorGUILayout.EnumPopup("Tile type", _currentCell.tileType);
+                    _currentCellCopy.tileType = 
+                        (Tile.TileType) EditorGUILayout.EnumPopup("Tile type", _currentCellCopy.tileType);
+                    break;
+                case Entity.EntityType.None:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -154,19 +167,32 @@ namespace BackToLife
             if (GUILayout.Button($"Confirm"))
             {
                 _windowOpen = false;
-                _target.cells.Add(_currentCell);
+                
+                _currentCell.ChangeTo(_currentCellCopy);
+                
+                if (_newCell)
+                {
+                    _target.cells.Add(_currentCell);
+                    _newCell = false;
+                }
+
+                _currentCellCopy = null;
             }
             if (GUILayout.Button("Delete"))
             {
                 _windowOpen = false;
                 _target.cells.Remove(_target.cells.Find(x => x.Equals(_currentCell)));
                 _currentCell = null;
+                
+                _currentCellCopy = null;
             }
             EditorGUILayout.EndHorizontal();
             if (GUILayout.Button("Cancel"))
             {
                 _windowOpen = false;
                 _currentCell = null;
+                
+                _currentCellCopy = null;
             }
             GUI.DragWindow();
         }
@@ -215,6 +241,8 @@ namespace BackToLife
                             throw new ArgumentOutOfRangeException(nameof(tileType), tileType, null);
                     }
                     break;
+                case Entity.EntityType.None:
+                    return defaultTex;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(entityType), entityType, null);
             }
