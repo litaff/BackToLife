@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace BackToLife
 {
+    // TODO: Fix slime block moving like shit
     [Serializable]
     public class GameGrid : IDisposable
     {
@@ -57,6 +58,7 @@ namespace BackToLife
         /// <returns>True if moved by at least one tile</returns>
         private bool MoveBlock(Block block, Vector2 dir, int str, bool chain = false)
         {
+            block.moved = true;
             dir = block.Move(dir);
             if (chain)
                 dir = dir.normalized;
@@ -104,10 +106,18 @@ namespace BackToLife
                     block.gridPosition + new Vector2(dir.normalized.y, dir.normalized.x) - dir.normalized,
                     block.gridPosition - new Vector2(dir.normalized.y, dir.normalized.x) - dir.normalized
                 };
-                var blocksToMove = chainPosition.Select(vector2 => (Block) GetCellFromGridPosition(vector2).currentEntity).ToList();
-                foreach (var b in blocksToMove.Where(b => b))
+                var entitiesToMove = chainPosition.Select(vector2 => 
+                    GetCellFromGridPosition(vector2)?.currentEntity).ToList();
+                foreach (var entityToMove in entitiesToMove.Where(b => b))
                 {
-                    MoveBlock(b, dir, str, true);
+                    switch (entityToMove)
+                    {
+                        case SlimeBlock {moved: true}:
+                            continue;
+                        case Block b:
+                            MoveBlock(b, dir, str, true);
+                            break;
+                    }
                 }
             }
 
@@ -201,6 +211,8 @@ namespace BackToLife
 
             foreach (var entity in entities)
             {
+                if (entity is Block block)
+                    block.moved = false;
                 cells[(int) entity.gridPosition.x, (int) entity.gridPosition.y].currentEntity = entity;
                 entity.cell = cells[(int) entity.gridPosition.x, (int) entity.gridPosition.y];
                 if (!entity.cell.tile) continue;
@@ -212,7 +224,7 @@ namespace BackToLife
 
         public GameCell GetCellFromGridPosition(Vector2 pos)
         {
-            return cells[(int)pos.x, (int)pos.y];
+            return MoveInGrid(pos) ? cells[(int)pos.x, (int)pos.y] : null;
         }
 
         public Vector2 GetGridPositionFromCell(GameCell cell)

@@ -4,6 +4,7 @@ namespace BackToLife
 {
     public abstract class Block : Entity
     {
+        public bool moved;
         public int blockWeight;
         public BlockType blockType;
 

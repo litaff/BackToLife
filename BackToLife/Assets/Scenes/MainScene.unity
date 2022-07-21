@@ -519,7 +519,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridPatterns:
-  - {fileID: 11400000, guid: 5d852b40910982547b1db0227abc4b6c, type: 2}
   - {fileID: 11400000, guid: ab68c34f940452941b067a7ae01f1a26, type: 2}
   blankPattern: {fileID: 11400000, guid: 40e5a88aa159fed419c01d8076ef8bdd, type: 2}
 --- !u!1 &1373862500
