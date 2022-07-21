@@ -23,7 +23,7 @@ namespace BackToLife
             
             if(uiPages.Count != uiPages.Distinct().Count())
                 Debug.LogWarning($"{gameObject.name} has more than one page of the same type, " +
-                                 $"only the first one will be active");
+                                 "only the first one will be active");
 
             _gameManager = GetComponentInParent<GameManager>();
             _sceneManager = parent.GetComponentInChildren<SceneManager>();
@@ -64,26 +64,32 @@ namespace BackToLife
         {
             if (_sceneManager.loadedScene == SceneManager.SceneType.Editor)
             {
-                
-                if (_uiPages.Where(page => page.type == Page.PageType.CellMod).Any(page => page.gameObject.activeSelf))
-                {
-                    SetPageActive(Page.PageType.Size, false);
-                    return;
-                }
-                if (_uiPages.Where(page => page.type == Page.PageType.Size).Any(page => page.gameObject.activeSelf))
-                {
-                    return;
-                }
-                if (Helper.IsOverUI()) return;
-                
-                if (!_editorManager.OpenCellMod()) return;
-                
-                SetPageActive(Page.PageType.CellMod, true);
+                HandleEditorWindows();  
             }
         }
 
+        private void HandleEditorWindows()
+        {
+            if (_uiPages.Where(page => page.type == Page.PageType.CellMod).Any(page => page.gameObject.activeSelf))
+            {
+                SetPageActive(Page.PageType.Size, false);
+                return;
+            }
+            if (_uiPages.Where(page => page.type == Page.PageType.Size).Any(page => page.gameObject.activeSelf))
+            {
+                return;
+            }
+            if (Helper.IsOverUI()) return;
+                
+            if (!_editorManager.OpenCellMod()) return;
+                
+            SetPageActive(Page.PageType.CellMod, true);
+        }
+        
         private void AddListenerToButton(Button button)
         {
+            #region General
+
             if (button.CompareTag("Tutorial button"))
             {
                 button.onClick.AddListener(_gameManager.StartLevel);
@@ -115,7 +121,11 @@ namespace BackToLife
                 button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Editor));
                 return;
             }
-            
+
+            #endregion
+
+            #region Size Config Buttons
+
             if (button.CompareTag("Size button"))
             {
                 button.onClick.AddListener(() => SetPageActive(Page.PageType.Size, true));
@@ -128,6 +138,10 @@ namespace BackToLife
                 button.onClick.AddListener(() => SetPageActive(Page.PageType.Size, false));
                 return;
             }
+
+            #endregion
+
+            #region Cell Mod Buttons
 
             if (button.CompareTag("Delete cell button"))
             {
@@ -142,6 +156,8 @@ namespace BackToLife
                 button.onClick.AddListener(() => SetPageActive(Page.PageType.CellMod, false));
                 return;
             }
+
+            #endregion
         }
         
     }

@@ -12,7 +12,7 @@ namespace BackToLife
         public GameObject blockType;
         public GameObject tileType;
 
-        private Vector2 gridPosition;
+        private Vector2 _gridPosition;
         private TMP_Dropdown _entityType;
         private TMP_Dropdown _blockType;
         private TMP_Dropdown _tileType;
@@ -22,7 +22,7 @@ namespace BackToLife
         {
             return new GridPattern.PatternCell
             {
-                gridPosition = gridPosition,
+                gridPosition = _gridPosition,
                 entityType = (Entity.EntityType) _entityType.value,
                 blockType = (Block.BlockType) _blockType.value,
                 tileType = (Tile.TileType) _tileType.value
@@ -31,19 +31,19 @@ namespace BackToLife
         // this needs grid position
         public Vector2 GetGridPosition()
         {
-            return gridPosition;
+            return _gridPosition;
         }
 
         public void SetPatternCell(GridPattern.PatternCell patternCell, Vector2 gridPos)
         {
             if (patternCell is null)
             {
-                gridPosition = gridPos;
+                _gridPosition = gridPos;
                 _entityType.value = 0;
             }
             else
             {
-                gridPosition = patternCell.gridPosition;
+                _gridPosition = patternCell.gridPosition;
                 _entityType.value = (int)patternCell.entityType;
                 _blockType.value = (int)patternCell.blockType;
                 _tileType.value = (int)patternCell.tileType;

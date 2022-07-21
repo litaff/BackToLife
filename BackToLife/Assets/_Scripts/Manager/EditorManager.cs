@@ -42,7 +42,7 @@ namespace BackToLife
             return true;
         }
 
-        public IEnumerator EditDelay()
+        private IEnumerator EditDelay()
         {
             _edited = true;
             yield return new WaitForSeconds(1);
