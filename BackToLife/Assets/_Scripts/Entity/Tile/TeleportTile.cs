@@ -9,7 +9,8 @@ namespace BackToLife
 
         public override void OnInteract()
         {
-
+            if(!linked) return;
+            
             if (!(cell.currentEntity is null))
             {
                 if (!used && cell.currentEntity.GetType() == typeof(Player))

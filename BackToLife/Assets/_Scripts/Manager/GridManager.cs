@@ -39,8 +39,10 @@ namespace BackToLife
                 enabled = false;
                 return;
             }
-            
-            _grid?.Dispose(); // dispose of whatever is left
+               
+            // dispose of whatever is left
+            _grid?.Dispose(); 
+            _firstTeleportTile = null;
             
             _dimensions.x = pattern.nrOfColumns;
             _dimensions.y = pattern.nrOfRows;
@@ -98,6 +100,7 @@ namespace BackToLife
             {
                 firstTile.linked = secondTile;
                 secondTile.linked = firstTile;
+                print($"Linked {firstTile.gridPosition} and {secondTile.gridPosition}");
             }
         }
 
@@ -170,6 +173,7 @@ namespace BackToLife
                 _endTile.Destroy();
             _endTile = null;
             _player = null;
+            _firstTeleportTile = null;
             gameObject.transform.parent.GetComponentInChildren<SpriteRenderer>().size = new Vector2(1, 1);
             _lineRenderer.positionCount = 0;
         }

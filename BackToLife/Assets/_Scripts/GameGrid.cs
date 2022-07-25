@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace BackToLife
 {
-    // TODO: Fix slime block moving like shit
     [Serializable]
     public class GameGrid : IDisposable
     {
@@ -112,7 +111,7 @@ namespace BackToLife
                 {
                     switch (entityToMove)
                     {
-                        case SlimeBlock {moved: true}:
+                        case SlimeBlock {moved: true}: // to not move slime blocks multiple times
                             continue;
                         case Block b:
                             MoveBlock(b, dir, str, true);
@@ -128,6 +127,8 @@ namespace BackToLife
         
         public void Dispose()
         {
+            if(cells is null) return;
+            
             foreach (var cell in cells)
             {
                 if(cell.currentEntity)
@@ -146,6 +147,8 @@ namespace BackToLife
         {
             foreach (var cell in cells)
             {
+                if(cell.currentEntity is Block block)
+                    block.moved = false;
                 if(cell.GetTransform() is null)
                     continue;
                 var trans = cell.GetTransform();
@@ -211,8 +214,6 @@ namespace BackToLife
 
             foreach (var entity in entities)
             {
-                if (entity is Block block)
-                    block.moved = false;
                 cells[(int) entity.gridPosition.x, (int) entity.gridPosition.y].currentEntity = entity;
                 entity.cell = cells[(int) entity.gridPosition.x, (int) entity.gridPosition.y];
                 if (!entity.cell.tile) continue;

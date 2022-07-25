@@ -13,7 +13,7 @@ namespace BackToLife
 
         private GridPattern.PatternCell _currentCell;
         private GridPattern.PatternCell _currentCellCopy;
-        private Rect _windowRect = new Rect(100, 100, 250, 150);
+        private Rect _windowRect = new Rect(300, 43, 250, 150);
         private bool _windowOpen;
         private string _currentWindowID; // first digit is x, second digit is y || format => 9x9y
         private bool _newCell;
@@ -61,11 +61,11 @@ namespace BackToLife
 
         private void OnGUI()
         {
-            PatternErrors();
-            
             _target.nrOfRows = EditorGUILayout.IntSlider("Nr Of Rows", _target.nrOfRows, 8, 16);
             _target.nrOfColumns = EditorGUILayout.IntSlider("Nr Of Columns", _target.nrOfColumns, 4, 9);
             
+            PatternErrors();
+
             for (var i = _target.nrOfRows-1; i >= 0; i--)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -98,6 +98,8 @@ namespace BackToLife
             if (_windowOpen)
                 _windowRect = GUILayout.Window(int.Parse(_currentWindowID), _windowRect, DoWindow, "Cell editor");
             EndWindows();
+            
+            _target.RemoveCellOutOfBounds();
         }
         
         private void DoWindow(int windowID)
@@ -106,7 +108,6 @@ namespace BackToLife
             var cordX = "";
             var cordY = "";
             var y = true;
-            
             for (var i = id.Length - 1; i > 0; i--)
             {
                 if (y)
@@ -169,11 +170,17 @@ namespace BackToLife
                 _windowOpen = false;
                 
                 _currentCell.ChangeTo(_currentCellCopy);
-                
+
                 if (_newCell)
                 {
                     _target.cells.Add(_currentCell);
                     _newCell = false;
+                }
+
+                if (_currentCell.entityType == Entity.EntityType.None)
+                {
+                    _target.cells.Remove(_target.cells.Find(x => x.Equals(_currentCell)));
+                    _currentCell = null;
                 }
 
                 _currentCellCopy = null;
@@ -194,7 +201,6 @@ namespace BackToLife
                 
                 _currentCellCopy = null;
             }
-            GUI.DragWindow();
         }
 
         private void PatternErrors()

@@ -25,7 +25,7 @@ namespace BackToLife
             RemoveCellOutOfBounds();
         }
 
-        private void RemoveCellOutOfBounds()
+        public void RemoveCellOutOfBounds()
         {
             foreach (var cell in cells.ToList())
             {
