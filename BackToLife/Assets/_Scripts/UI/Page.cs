@@ -10,6 +10,12 @@ namespace BackToLife
         {
             gameObject.SetActive(state);
         }
+
+        public void Close()
+        {
+            SetActive(false);   
+        }
+        
         public enum PageType
         {
             Menu,
@@ -18,7 +24,9 @@ namespace BackToLife
             Browser,
             Editor,
             Size,
-            CellMod
+            CellMod,
+            CompleteTest,
+            TestingError
         }
     }
 }

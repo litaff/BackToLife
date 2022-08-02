@@ -475,6 +475,7 @@ MonoBehaviour:
   canvas: {fileID: 1606789380}
   sliderHandler: {fileID: 0}
   cellModHandler: {fileID: 0}
+  testing: 0
 --- !u!1 &1238583698
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,6 +522,7 @@ MonoBehaviour:
   gridPatterns:
   - {fileID: 11400000, guid: ab68c34f940452941b067a7ae01f1a26, type: 2}
   blankPattern: {fileID: 11400000, guid: 40e5a88aa159fed419c01d8076ef8bdd, type: 2}
+  editorPattern: {fileID: 0}
 --- !u!1 &1373862500
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,6 +574,7 @@ MonoBehaviour:
   - {fileID: 2258968659676061523, guid: 00e699ac8b71756499710ab95cde5985, type: 3}
   - {fileID: 2258968659676061523, guid: 5add5194d95902d48b1342d9b0f126c3, type: 3}
   - {fileID: 2258968659676061523, guid: 315a3c81674859f479467927570ab68b, type: 3}
+  - {fileID: 7405939892823395186, guid: 99f63d7c27bf63846bd80f59ca7eb6bc, type: 3}
   canvas: {fileID: 1606789380}
 --- !u!1 &1426966428
 GameObject:
