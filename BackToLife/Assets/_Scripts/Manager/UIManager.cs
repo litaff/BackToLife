@@ -68,11 +68,21 @@ namespace BackToLife
             }
         }
 
+        private void TestingCheck()
+        {
+            if (_editorManager.testing)
+            {
+                SetPageActive(Page.PageType.Editor, false);
+                _sceneManager.LoadScene(SceneManager.SceneType.Gameplay);
+                return;
+            }
+            SetPageActive(Page.PageType.TestingError,true);
+        }
+        
         private void HandleEditorWindows()
         {
             if (_uiPages.Where(page => page.type == Page.PageType.CellMod).Any(page => page.gameObject.activeSelf))
             {
-                SetPageActive(Page.PageType.Size, false);
                 return;
             }
             if (_uiPages.Where(page => page.type == Page.PageType.Size).Any(page => page.gameObject.activeSelf))
@@ -82,7 +92,6 @@ namespace BackToLife
             if (Helper.IsOverUI()) return;
                 
             if (!_editorManager.OpenCellMod()) return;
-                
             SetPageActive(Page.PageType.CellMod, true);
         }
         
@@ -126,16 +135,9 @@ namespace BackToLife
 
             #region Size Config Buttons
 
-            if (button.CompareTag("Size button"))
-            {
-                button.onClick.AddListener(() => SetPageActive(Page.PageType.Size, true));
-                return;
-            }
-
             if (button.CompareTag("Size confirm button"))
             {
                 button.onClick.AddListener(_editorManager.Resize);
-                button.onClick.AddListener(() => SetPageActive(Page.PageType.Size, false));
                 return;
             }
 
@@ -146,14 +148,40 @@ namespace BackToLife
             if (button.CompareTag("Delete cell button"))
             {
                 button.onClick.AddListener(_editorManager.Delete);
-                button.onClick.AddListener(() => SetPageActive(Page.PageType.CellMod, false));
                 return;
             }
 
             if (button.CompareTag("Submit cell button"))
             {
                 button.onClick.AddListener(_editorManager.Modify);
-                button.onClick.AddListener(() => SetPageActive(Page.PageType.CellMod, false));
+                return;
+            }
+
+            #endregion
+
+            #region Editor Buttons
+
+            if (button.CompareTag("Size button"))
+            {
+                button.onClick.AddListener(() => SetPageActive(Page.PageType.Size, true));
+                return;
+            }
+            
+            if (button.CompareTag("Test button"))
+            {
+                button.onClick.AddListener(_editorManager.StartTesting);
+                button.onClick.AddListener(TestingCheck);
+                return;
+            }
+            
+            if (button.CompareTag("Submit pattern button"))
+            {
+                return;
+            }
+
+            if (button.CompareTag("New pattern button"))
+            {
+                button.onClick.AddListener(_editorManager.NewPattern);
                 return;
             }
 

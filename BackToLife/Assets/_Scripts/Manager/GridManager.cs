@@ -19,6 +19,7 @@ namespace BackToLife
 
         public void GameUpdate(Vector2 swipeDir, float updateSpeed)
         {
+            _lineRenderer.positionCount = 0;
             _grid.UpdateCellsInWorld(updateSpeed);
             if (swipeDir != Vector2.zero)
                 _grid.MoveInDirection(_player, swipeDir, _player.moveStrength);
