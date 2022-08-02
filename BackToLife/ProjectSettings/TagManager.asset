@@ -10,12 +10,13 @@ TagManager:
   - Main menu button
   - Reset button
   - Test button
-  - Validate button
   - Editor button
   - Size button
   - Size confirm button
   - Delete cell button
   - Submit cell button
+  - Submit pattern button
+  - New pattern button
   layers:
   - Default
   - TransparentFX
