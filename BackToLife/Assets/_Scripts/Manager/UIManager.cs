@@ -5,6 +5,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO: Get rid of pages and use scenes with ui already setup
+
 namespace BackToLife
 {
     public class UIManager : MonoBehaviour

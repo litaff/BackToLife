@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+// TODO: add error messages if StartTesting method fails
+
 namespace BackToLife
 {
     public class EditorManager : MonoBehaviour

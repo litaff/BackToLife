@@ -11,7 +11,7 @@ namespace BackToLife
         [SerializeField] private GridPattern blankPattern;
         [SerializeField] private GridPattern editorPattern;
         private GridPattern _currentPattern;
-        public bool StartAble => _currentPattern.Valid;
+        public bool StartAble => editorPattern.Valid;
         public static event Action PatternChange;
 
         private void Awake()

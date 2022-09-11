@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -68,7 +67,7 @@ namespace BackToLife
         {
             print($"Unloaded: {loadedScene}");
             loadedScene = SceneType.EndLevel;
-            //_uiManager.SetAllPagesActive(false);
+            _uiManager.SetAllPagesActive(false);
             _uiManager.SetPageActive(Page.PageType.EndLevel, true);
             print($"Loaded: {loadedScene}");        }
         
@@ -76,7 +75,7 @@ namespace BackToLife
         {
             print($"Unloaded: {loadedScene}");
             loadedScene = SceneType.SubmitLevel;
-            //_uiManager.SetAllPagesActive(false);
+            _uiManager.SetAllPagesActive(false);
             _uiManager.SetPageActive(Page.PageType.CompleteTest, true);
             print($"Loaded: {loadedScene}");
             
