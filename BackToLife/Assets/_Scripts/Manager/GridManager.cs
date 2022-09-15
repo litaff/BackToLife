@@ -9,6 +9,7 @@ namespace BackToLife
     public class GridManager : MonoBehaviour
     {
         [SerializeField] private float cellSize;
+        [SerializeField] private SpriteRenderer background;
         private Vector2 _dimensions;
         private GameGrid _grid;
         private Player _player;
@@ -48,7 +49,11 @@ namespace BackToLife
             _dimensions.x = pattern.nrOfColumns;
             _dimensions.y = pattern.nrOfRows;
             _grid = new GameGrid(cellSize ,_dimensions, transform.position);
-            gameObject.transform.parent.GetComponentInChildren<SpriteRenderer>().size = _grid.GetBackgroundSize(Vector2.one * 6 / 16);
+            
+            // background init
+            background.size = _grid.GetBackgroundSize(Vector2.one * 6 / 16);
+            background.enabled = true;
+
             foreach (var cell in pattern.cells)
             {
                 var prefab = _prefabManager.GetPrefab(cell.entityType, cell.blockType, cell.tileType);
@@ -161,10 +166,10 @@ namespace BackToLife
         
         private void Awake()
         {
-            _prefabManager = gameObject.transform.parent.GetComponentInChildren<PrefabManager>();
+            _prefabManager = GetComponentInChildren<PrefabManager>();
             _lineRenderer = GetComponent<LineRenderer>();
         }
-        
+
         private void OnDisable()
         {
             _grid?.Dispose();
@@ -175,7 +180,7 @@ namespace BackToLife
             _endTile = null;
             _player = null;
             _firstTeleportTile = null;
-            gameObject.transform.parent.GetComponentInChildren<SpriteRenderer>().size = new Vector2(1, 1);
+            background.enabled = false;
             _lineRenderer.positionCount = 0;
         }
         

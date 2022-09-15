@@ -55,16 +55,17 @@ namespace BackToLife
             _submitAble = false;
         }
 
-        public bool OpenCellMod()
+        private void OpenCellMod()
         {
-            if (testing) return false;
-            if (_edited) return false;
+            if (Helper.IsOverUI()) return;
+            if (testing) return;
+            if (_edited) return;
             var touchPosition = _inputManager.GetTouchPosition();
             var gridPosition = _levelManager.GetGridPositionFromTouch(touchPosition);
-            if (gridPosition == new Vector2(-1, -1)) return false;
+            if (gridPosition == new Vector2(-1, -1)) return;
             var patternCell = _levelManager.GetPatternCellFromGridPosition(gridPosition);
+            cellModHandler.gameObject.SetActive(true); // activate before SetPatternCell
             cellModHandler.SetPatternCell(patternCell, gridPosition);
-            return true;
         }
 
         private IEnumerator EditDelay()
@@ -76,12 +77,13 @@ namespace BackToLife
 
         private void Awake()
         {
-            _levelManager = transform.parent.GetComponentInChildren<LevelManager>();
+            _levelManager = FindObjectOfType<LevelManager>();
             _inputManager = new InputManager();
         }
 
         private void Update()
         {
+            OpenCellMod();
             if(_submitAble)
                 Debug.Log("OK");
         }

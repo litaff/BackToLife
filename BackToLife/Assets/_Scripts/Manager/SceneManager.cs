@@ -1,4 +1,6 @@
 ﻿using System;
+using UnityEditor;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,82 +8,24 @@ namespace BackToLife
 {
     public class SceneManager : MonoBehaviour
     {
-        public SceneType loadedScene;
-        private UIManager _uiManager;
+        public static SceneType loadedScene;
 
         private void Awake()
         {
-            _uiManager = transform.parent.GetComponentInChildren<UIManager>();
+            Debug.Log($"Current scene: {loadedScene}");
         }
 
-        public UnityAction LoadScene(SceneType scene)
+        public void LoadScene(int sceneId)
         {
-            UnityAction action = scene switch
-            {
-                SceneType.Menu => LoadMenu,
-                SceneType.Gameplay => LoadGameplay,
-                SceneType.Browser => LoadBrowser,
-                SceneType.Editor => LoadEditor,
-                SceneType.EndLevel => LoadEndLevel,
-                SceneType.SubmitLevel => LoadSubmitLevel,
-                _ => throw new ArgumentOutOfRangeException(nameof(scene), scene, null)
-            };
-
-            return action;
+            loadedScene = (SceneType) sceneId;
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneId);
         }
 
-        private void LoadMenu()
+        public void LoadScene(SceneType sceneType)
         {
-            print($"Unloaded: {loadedScene}");
-            loadedScene = SceneType.Menu;
-            //_uiManager.SetAllPagesActive(false);
-            _uiManager.SetPageActive(Page.PageType.Menu, true);
-            print($"Loaded: {loadedScene}");
-            }
-
-        private void LoadGameplay()
-        {
-            print($"Unloaded: {loadedScene}");
-            loadedScene = SceneType.Gameplay;
-            //_uiManager.SetAllPagesActive(false);
-            _uiManager.SetPageActive(Page.PageType.Gameplay, true);
-            print($"Loaded: {loadedScene}");        }
-
-        private void LoadBrowser()
-        {
-            print($"Unloaded: {loadedScene}");
-            loadedScene = SceneType.Browser;
-            //_uiManager.SetAllPagesActive(false);
-            _uiManager.SetPageActive(Page.PageType.Browser,true);
-            print($"Loaded: {loadedScene}");        }
-
-        private void LoadEditor()
-        {
-            print($"Unloaded: {loadedScene}");
-            loadedScene = SceneType.Editor;
-            //_uiManager.SetAllPagesActive(false);
-            _uiManager.SetPageActive(Page.PageType.Editor,true);
-            print($"Loaded: {loadedScene}");        }
-
-        private void LoadEndLevel()
-        {
-            print($"Unloaded: {loadedScene}");
-            loadedScene = SceneType.EndLevel;
-            _uiManager.SetAllPagesActive(false);
-            _uiManager.SetPageActive(Page.PageType.EndLevel, true);
-            print($"Loaded: {loadedScene}");        }
-        
-        private void LoadSubmitLevel()
-        {
-            print($"Unloaded: {loadedScene}");
-            loadedScene = SceneType.SubmitLevel;
-            _uiManager.SetAllPagesActive(false);
-            _uiManager.SetPageActive(Page.PageType.CompleteTest, true);
-            print($"Loaded: {loadedScene}");
-            
+            LoadScene((int) sceneType);
         }
-        
-        
+
         public enum SceneType
         {
             Menu,

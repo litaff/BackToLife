@@ -112,5 +112,10 @@ namespace BackToLife
         {
             return editorPattern.cells.FirstOrDefault(cell => cell.gridPosition == gridPosition);
         }
+
+        public void OnDestroy()
+        {
+            PatternChange = null;
+        }
     }
 }

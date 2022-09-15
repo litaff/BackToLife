@@ -15,39 +15,8 @@ namespace BackToLife
         private InputManager _inputManager;
         private GridManager _gridManager;
         private LevelManager _levelManager;
-        private SceneManager _sceneManager;
         private EditorManager _editorManager;
 
-        
-        private void Awake()
-        {
-            _inputManager = new InputManager();
-            _levelManager = GetComponentInChildren<LevelManager>();
-            _gridManager = GetComponentInChildren<GridManager>();
-            _sceneManager = GetComponentInChildren<SceneManager>();
-            _editorManager = GetComponentInChildren<EditorManager>();
-            _gridManager.enabled = false;
-            _editorManager.enabled = false;
-        }
-
-        private void Start()
-        {
-            _sceneManager.LoadScene(SceneManager.SceneType.Menu).Invoke();
-            LevelManager.PatternChange += () => _gridManager.InitializeGrid(_levelManager.LoadEditorLevel());
-        }
-
-        public void StartLevel()
-        {
-            _gridManager.enabled = true;
-            _gridManager.InitializeGrid(_levelManager.StartLevel());
-        }
-
-        public void StartEditor()
-        {
-            _gridManager.enabled = true;
-            _editorManager.enabled = true;
-            _gridManager.InitializeGrid(_levelManager.LoadEditorLevel());
-        }
 
         public void ResetLevel()
         {
@@ -56,19 +25,62 @@ namespace BackToLife
             _gridManager.InitializeGrid(_levelManager.ResetLevel());
         }
 
-        public void EndAll()
+        private void Awake()
         {
+            _inputManager = new InputManager();
+            _levelManager = FindObjectOfType<LevelManager>();
+            _gridManager = FindObjectOfType<GridManager>();
+            _editorManager = FindObjectOfType<EditorManager>();
             _gridManager.enabled = false;
+            _editorManager.enabled = false;
+
+            switch (SceneManager.loadedScene)
+            {
+                case SceneManager.SceneType.Menu:
+                    _gridManager.enabled = false;
+                    break;
+                case SceneManager.SceneType.Gameplay:
+                    break;
+                case SceneManager.SceneType.Browser:
+                    break;
+                case SceneManager.SceneType.Editor:
+                    StartEditor();
+                    break;
+                case SceneManager.SceneType.EndLevel:
+                    break;
+                case SceneManager.SceneType.SubmitLevel:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void Start()
+        {
+            LevelManager.PatternChange += () => _gridManager.InitializeGrid(_levelManager.LoadEditorLevel());
+        }
+
+        private void StartLevel()
+        {
+            _gridManager.enabled = true;
+            _gridManager.InitializeGrid(_levelManager.StartLevel());
+        }
+
+        private void StartEditor()
+        {
+            _gridManager.enabled = true;
+            _editorManager.enabled = true;
+            _gridManager.InitializeGrid(_levelManager.LoadEditorLevel());
         }
 
         private void Update()
         {
-            if (_sceneManager.loadedScene == SceneManager.SceneType.Menu)
+            if (SceneManager.loadedScene == SceneManager.SceneType.Menu)
             {
                 _gridManager.enabled = false;
                 _editorManager.enabled = false;
             }
-            if (_sceneManager.loadedScene == SceneManager.SceneType.Editor)
+            if (SceneManager.loadedScene == SceneManager.SceneType.Editor)
             {
                 if (!_gridManager.enabled) return;
                 if (_editorManager.testing)
@@ -76,7 +88,7 @@ namespace BackToLife
                     _gridManager.GameUpdate(_inputManager.GetSwipeDirection(),gridUpdateSpeed);
                     if (!_gridManager.WinCondition()) return;
                     _editorManager.PatternSubmitAble();
-                    _sceneManager.LoadScene(SceneManager.SceneType.SubmitLevel).Invoke();
+                    //_sceneManager.LoadScene(SceneManager.SceneType.SubmitLevel).Invoke();
                     _gridManager.enabled = false;
                 }
                 else
@@ -84,12 +96,12 @@ namespace BackToLife
                     _gridManager.EditorUpdate();
                 }
             }
-            if (_sceneManager.loadedScene == SceneManager.SceneType.Gameplay)
+            if (SceneManager.loadedScene == SceneManager.SceneType.Gameplay)
             {
                 if (!_gridManager.enabled) return;
                 _gridManager.GameUpdate(_inputManager.GetSwipeDirection(),gridUpdateSpeed);
                 if (!_gridManager.WinCondition()) return;
-                _sceneManager.LoadScene(SceneManager.SceneType.EndLevel).Invoke();
+                //_sceneManager.LoadScene(SceneManager.SceneType.EndLevel).Invoke();
                 _gridManager.enabled = false;
             }
         }
