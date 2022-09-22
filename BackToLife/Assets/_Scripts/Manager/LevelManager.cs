@@ -3,43 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// TODO: transfer level data from editor
+
 namespace BackToLife
 {
     public class LevelManager : MonoBehaviour
     {
-        [SerializeField] private List<GridPattern> gridPatterns;
         [SerializeField] private GridPattern blankPattern;
-        [SerializeField] private GridPattern editorPattern;
-        private GridPattern _currentPattern;
-        public bool StartAble => editorPattern.Valid;
+        private static GridPattern _currentPattern;
+        private static GridPattern _editorPattern;
+        public bool StartAble => _currentPattern.Valid;
         public static event Action PatternChange;
 
-        private void Awake()
+        public GridPattern LoadLevel()
         {
-            _currentPattern = GetNextPattern();
-        }
-
-        private GridPattern GetNextPattern()
-        {
-            var pattern = gridPatterns[0];
-            gridPatterns.Remove(pattern);
-            return pattern;
-        }
-        
-        public GridPattern StartLevel()
-        {
-            if(_currentPattern == null) return null;
-            if (_currentPattern.Valid)
-            {
-                return _currentPattern;
-            }
-            Debug.LogError($"{_currentPattern.name} is not valid!");
-            return null;
+            return _currentPattern;
         }
 
         public void NewEditorLevel()
         {
-            editorPattern = Instantiate(blankPattern);
+            _editorPattern = Instantiate(blankPattern);
             PatternChange?.Invoke();
         }
 
@@ -48,21 +31,24 @@ namespace BackToLife
             return _currentPattern;
         }
 
-        public GridPattern LoadEditorLevel()
+        public void LoadEditorLevel()
         {
-            return editorPattern ? editorPattern : editorPattern = Instantiate(blankPattern);
+            if(_editorPattern == null)
+                NewEditorLevel();
+
+            _currentPattern = _editorPattern;
         }
 
         public void ResizePattern(Vector2 size)
         {
-            editorPattern.nrOfColumns = (int)size.x;
-            editorPattern.nrOfRows = (int)size.y;
+            _editorPattern.nrOfColumns = (int)size.x;
+            _editorPattern.nrOfRows = (int)size.y;
             PatternChange?.Invoke();
         }
         
         public void ModifyCell(GridPattern.PatternCell patternCell)
         {
-            foreach (var cell in editorPattern.cells.Where(cell => cell.gridPosition == patternCell.gridPosition))
+            foreach (var cell in _editorPattern.cells.Where(cell => cell.gridPosition == patternCell.gridPosition))
             {
                 cell.entityType = patternCell.entityType;
                 cell.blockType = patternCell.blockType;
@@ -70,15 +56,15 @@ namespace BackToLife
                 PatternChange?.Invoke();
                 return;
             }
-            editorPattern.cells.Add(patternCell);
+            _currentPattern.cells.Add(patternCell);
             PatternChange?.Invoke();
         }
 
         public void RemoveFromPattern(Vector2 position)
         {
-            foreach (var cell in editorPattern.cells.ToList().Where(cell => cell.gridPosition == position))
+            foreach (var cell in _editorPattern.cells.ToList().Where(cell => cell.gridPosition == position))
             {
-                editorPattern.cells.Remove(cell);
+                _editorPattern.cells.Remove(cell);
                 PatternChange?.Invoke();
                 return;
             }
@@ -87,11 +73,11 @@ namespace BackToLife
         /// <returns> touch out of grid if return value is -1,-1 </returns>
         public Vector2 GetGridPositionFromTouch(Vector2 touchPosition)
         {
-            var gridSize = new Vector2(0.5f * editorPattern.nrOfColumns, 0.5f * editorPattern.nrOfRows); // 0.5 = cell size
+            var gridSize = new Vector2(0.5f * _editorPattern.nrOfColumns, 0.5f * _editorPattern.nrOfRows); // 0.5 = cell size
             var gridPosition = new Vector2(-1,-1);
-            for (var row = 0; row < editorPattern.nrOfRows; row++)
+            for (var row = 0; row < _editorPattern.nrOfRows; row++)
             {
-                for (var column = 0; column < editorPattern.nrOfColumns; column++)
+                for (var column = 0; column < _editorPattern.nrOfColumns; column++)
                 {
                     // GridManager is on 0,0 so transform.position can be used
                     // bottom left position of each cell
@@ -110,12 +96,17 @@ namespace BackToLife
         /// <returns> returns null if no cell at gridPosition </returns>
         public GridPattern.PatternCell GetPatternCellFromGridPosition(Vector2 gridPosition)
         {
-            return editorPattern.cells.FirstOrDefault(cell => cell.gridPosition == gridPosition);
+            return _editorPattern.cells.FirstOrDefault(cell => cell.gridPosition == gridPosition);
         }
 
         public void OnDestroy()
         {
             PatternChange = null;
+        }
+
+        private void Awake()
+        {
+            PatternChange += LoadEditorLevel;
         }
     }
 }

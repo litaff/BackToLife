@@ -4,8 +4,11 @@ using System.Linq;
 using System.Security;
 using UnityEngine;
 
+// TODO: check why this must be in editor and how to prevent it
+
 namespace BackToLife
 {
+    // must be in editor
     [Serializable]
     public class GameGrid : IDisposable
     {

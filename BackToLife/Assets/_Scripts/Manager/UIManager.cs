@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,77 +13,56 @@ namespace BackToLife
 {
     public class UIManager : MonoBehaviour
     {
-        [SerializeField] private Canvas canvas;
-        private GameManager _gameManager;
-        private BrowserManager _browserManager;
-        private EditorManager _editorManager;
+        [SerializeField] private TMP_Text messageWindow;
+        private List<Message> _messages;
+        private bool _msgActive;
 
-        private void Awake()
-        {/*
-            var parent = transform.parent;
-            
-            if(uiPages.Count != uiPages.Distinct().Count())
-                Debug.LogWarning($"{gameObject.name} has more than one page of the same type, " +
-                                 "only the first one will be active");
-
-            _gameManager = GetComponentInParent<GameManager>();
-            _sceneManager = parent.GetComponentInChildren<SceneManager>();
-            _browserManager = parent.GetComponentInChildren<BrowserManager>();
-            _editorManager = parent.GetComponentInChildren<EditorManager>();
-            
-            foreach (var newPage in uiPages.Select(page => Instantiate(page, canvas.transform)))
-            {
-                if (newPage.type == Page.PageType.Size)
-                    _editorManager.sliderHandler = newPage.GetComponent<SizeSliderHandler>();
-                if (newPage.type == Page.PageType.CellMod)
-                    _editorManager.cellModHandler = newPage.GetComponent<CellModHandler>();
-                newPage.SetActive(false);
-                var buttons = newPage.GetComponentsInChildren<Button>();
-                foreach (var button in buttons)
-                    AddListenerToButton(button);
-                _uiPages.Add(newPage);
-            }*/
+        public void ShowMessage(string msg, MsgType type)
+        {
+            _messages.Add(new Message{text = msg,type = type});
         }
 
-        private void TestingCheck()
+        private void DisplayMsg(Message msg)
         {
-            if (_editorManager.testing)
-            {
-                //_sceneManager.LoadScene(SceneManager.SceneType.Gameplay);
-                return;
-            }
-        }
-
-        private void AddListenerToButton(Button button)
-        {
-            #region General
-
-            if (button.CompareTag("Level browser button"))
-            {
-                //button.onClick.AddListener(_sceneManager.LoadScene(SceneManager.SceneType.Browser));
-                return;
-            }
-
-            if (button.CompareTag("Reset button"))
-            {
-                button.onClick.AddListener(_gameManager.ResetLevel);
-                return;
-            }
-
-            #endregion
-            
-
-            #region Editor Buttons
-
-            if (button.CompareTag("Test button"))
-            {
-                button.onClick.AddListener(_editorManager.StartTesting);
-                button.onClick.AddListener(TestingCheck);
-                return;
-            }
-
-            #endregion
+            messageWindow.text = msg.text;
+            messageWindow.gameObject.SetActive(true);
+            _msgActive = true;
+            StartCoroutine(DisplayMsgFor(2f));
+            _messages.Remove(msg);
         }
         
+        private IEnumerator DisplayMsgFor(float time)
+        {
+            yield return new WaitForSeconds(time);
+            _msgActive = false;
+            messageWindow.gameObject.SetActive(false);
+        }
+
+        private void Awake()
+        {
+            _msgActive = false;
+            _messages = new List<Message>();
+        }
+
+        private void Update()
+        {
+            if (_msgActive) return;
+            if (_messages.Count < 1) return;
+            DisplayMsg(_messages[0]);
+        }
+
+        [Serializable]
+        private struct Message
+        {
+            public string text;
+            public MsgType type;
+        }
+        
+        public enum MsgType
+        {
+            Info,
+            Warning,
+            Error
+        }
     }
 }
